@@ -239,6 +239,8 @@ def main():
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params={
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
+                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
+                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS
             },
         )
 
