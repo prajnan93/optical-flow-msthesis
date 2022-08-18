@@ -4,6 +4,7 @@ from ezflow.data import DataloaderCreator
 from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
 
+from nnflow import *
 
 def main():
 
