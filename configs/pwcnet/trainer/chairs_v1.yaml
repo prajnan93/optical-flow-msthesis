@@ -36,7 +36,7 @@ SCHEDULER:
     gamma: 0.5
 CRITERION:
   CUSTOM: True
-  NAME: MultiLevelLoss
+  NAME: MultiScaleLoss
   PARAMS:
     norm: "l2" 
     weights: [0.32, 0.08, 0.02, 0.01, 0.005] 
@@ -49,7 +49,6 @@ DEVICE: "0"
 DISTRIBUTED:
   USE: False
   WORLD_SIZE: 2
-  RANK: 0
   BACKEND: nccl
   MASTER_ADDR: localhost
   MASTER_PORT: "12355"

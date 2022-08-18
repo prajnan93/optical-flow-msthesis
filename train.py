@@ -67,17 +67,6 @@ def main():
         help="Device ID"
     )
     parser.add_argument(
-        "--distributed",
-        type=bool,
-        default=False,
-        help="Whether to do distributed training",
-    )
-    parser.add_argument(
-        "--distributed",
-        action="store_false",
-        help="Enable distributed training",
-    )
-    parser.add_argument(
         "--distributed_backend",
         type=str,
         default="nccl",
@@ -149,7 +138,6 @@ def main():
     training_cfg.CKPT_DIR = args.ckpt_dir
     training_cfg.DATA.BATCH_SIZE = args.batch_size
     training_cfg.DEVICE = args.device
-    training_cfg.DISTRIBUTED.USE = args.distributed
     training_cfg.DISTRIBUTED.BACKEND = args.distributed_backend
     training_cfg.MIXED_PRECISION = args.use_mixed_precision
     training_cfg.SCHEDULER.USE = args.use_scheduler
@@ -235,7 +223,6 @@ def main():
             crop=True,
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
-            normalize=training_cfg.DATA.NORMALIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params={
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
@@ -324,7 +311,6 @@ def main():
             crop=True,
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
-            normalize=training_cfg.DATA.NORMALIZE,
             augment=False,
         )
 
