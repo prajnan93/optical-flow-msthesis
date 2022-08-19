@@ -399,7 +399,7 @@ def main():
             trainer.train()
 
     else:
-        trainer = Trainer(
+        trainer = CustomTrainer(
             training_cfg, 
             model, 
             train_loader = train_loader_creator.get_dataloader(), 

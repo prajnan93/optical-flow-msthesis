@@ -260,5 +260,5 @@ class PWCNetV1(BaseModule):
             return flow_preds
 
         else:
-            return flow_up
+            return flow_up, flow_preds
 
