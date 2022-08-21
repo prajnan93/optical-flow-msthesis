@@ -112,7 +112,8 @@ def multi_level_flow_loss(loss_function,
     else:
         valid = ((valid >= 0.5) & (mag < max_flow)).to(target)
 
-    target_div = target / flow_div
+    #target_div = target / flow_div
+    target_div = target
 
     c_org, h_org, w_org = target.shape[1:]
     assert c_org == 2, f'The channels ground truth must be 2, but got {c_org}'
@@ -273,13 +274,20 @@ class MultiLevelEPE(nn.Module):
         Returns:
             Tensor: value of pixel-wise end point error loss.
         """
-        preds_dict = {
-            'level2': preds[0],
-            'level3': preds[1],
-            'level4': preds[2],
-            'level5': preds[3],
-            'level6': preds[4]
-        }
+
+        if isinstance(preds, dict):
+            preds_dict = preds
+        else:
+            preds_dict = {
+                'level6': preds[4],
+                'level5': preds[3],
+                'level4': preds[2],
+                'level3': preds[1],
+                'level2': preds[0]
+            }
+
+        # for level in preds_dict:
+        #     print(f"{level} {preds_dict[level].shape}")
 
         return multi_level_flow_loss(
             endpoint_error,

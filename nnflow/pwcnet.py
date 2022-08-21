@@ -962,7 +962,10 @@ class PWCNetDecoder(nn.Module):
         Args:
             warp_cfg (dict): Config for warp operation.
         """
-        self.warp = Warp(warp_cfg)
+        self.warp = Warp(
+                    use_mask=warp_cfg['use_mask'],
+                    align_corners=warp_cfg['align_corners']
+                )
 
     def forward(self, feat1, feat2):
         """Forward function for PWCNetDecoder.
@@ -999,8 +1002,7 @@ class PWCNetDecoder(nn.Module):
             post_flow = self.post_processor(feat)
             flow_pred[self.end_level] = flow_pred[self.end_level] + post_flow
 
-        return flow_pred
-
+        return flow_pred, self.end_level
 
 
 @MODEL_REGISTRY.register()
@@ -1080,5 +1082,23 @@ class PWCNetV2(BaseModule):
             Dict[str, Tensor]: The losses of output.
         """
 
+        H, W = img1.shape[-2:]
         feat1, feat2 = self.extract_feat(img1, img2)
-        return self.decoder(feat1=feat1, feat2=feat2)
+
+        flow_pred, end_level = self.decoder(feat1=feat1, feat2=feat2)
+
+        if self.training:
+            return flow_pred
+        else:
+            flow_result = flow_pred[end_level]
+            # resize flow to the size of images after augmentation.
+            flow_result = F.interpolate(
+                    flow_result, 
+                    size=(H, W), 
+                    mode='bilinear', 
+                    align_corners=False
+                )
+
+            flow_result = flow_result * 20.0
+
+            return flow_result, flow_pred
