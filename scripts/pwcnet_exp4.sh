@@ -10,7 +10,7 @@
 
 module load cuda/11.3
 cd ../
-python train.py --model "PWCNetV1" \
+python train.py --model "PWCNetV2" \
                 --model_cfg "./configs/pwcnet/models/nnflow_v3.yaml" \
                 --train_cfg "./configs/pwcnet/trainer/chairs_v2.yaml" \
                 --device "0" \
