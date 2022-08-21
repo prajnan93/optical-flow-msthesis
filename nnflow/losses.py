@@ -321,7 +321,7 @@ class MultiScale(nn.Module):
         self.numScales = numScales
         self.loss_weights = torch.FloatTensor([(l_weight / 2 ** scale) for scale in range(self.numScales)])
         self.l_type = norm
-        self.div_flow = 0.05
+        #self.div_flow = 0.05
         assert(len(self.loss_weights) == self.numScales)
 
         if self.l_type == 'L1':
@@ -338,7 +338,7 @@ class MultiScale(nn.Module):
         lossvalue = 0
 
         if type(output) is tuple or type(output) is list:
-            target = self.div_flow * target
+            #target = self.div_flow * target
             for i, flow_pred_ in enumerate(output):
                 target_ = self.multiScales[i](target)
                 lossvalue += self.loss_weights[i]*self.loss(flow_pred_, target_)
