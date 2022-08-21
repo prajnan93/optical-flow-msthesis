@@ -1064,9 +1064,6 @@ class PWCNetV2(BaseModule):
         img1 = 1.0 * (img1 / 255.0)
         img2 = 1.0 * (img2 / 255.0)
 
-        img1 = img1.contiguous()
-        img2 = img2.contiguous()
-
         return self.encoder(img1), self.encoder(img2)
 
     def forward(self, img1, img2):

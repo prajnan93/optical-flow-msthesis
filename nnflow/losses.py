@@ -55,7 +55,7 @@ def multi_level_flow_loss(loss_function,
                               level3=0.01,
                               level2=0.005),
                           valid: Optional[torch.Tensor] = None,
-                          flow_div: float = 1.0,
+                          flow_div: float = 20.,
                           max_flow: float = float('inf'),
                           resize_flow: str = 'downsample',
                           reduction: str = 'sum',
@@ -112,8 +112,7 @@ def multi_level_flow_loss(loss_function,
     else:
         valid = ((valid >= 0.5) & (mag < max_flow)).to(target)
 
-    #target_div = target / flow_div
-    target_div = target
+    target_div = target / flow_div
 
     c_org, h_org, w_org = target.shape[1:]
     assert c_org == 2, f'The channels ground truth must be 2, but got {c_org}'
@@ -220,7 +219,7 @@ class MultiLevelEPE(nn.Module):
                      level4=0.02,
                      level3=0.01,
                      level2=0.005),
-                 flow_div: float = 1.,
+                 flow_div: float = 20.,
                  max_flow: float = float('inf'),
                  resize_flow: str = 'downsample',
                  scale_as_level: bool = False,
