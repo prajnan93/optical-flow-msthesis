@@ -35,12 +35,11 @@ class CustomTrainer(Trainer):
                     img2.to(self.device),
                     target.to(self.device),
                 )
-                target = target / self.cfg.TARGET_SCALE_FACTOR
 
                 flow_up, flow_preds = self.model(img1, img2)
-                loss = self.loss_fn(flow_preds, target)
+                loss = self.loss_fn(flow_preds, target / self.cfg.TARGET_SCALE_FACTOR)
                 loss_meter.update(loss.item())
-                metric = self._calculate_metric(flow_up, target / 20.0)
+                metric = self._calculate_metric(flow_up, target)
                 metric_meter.update(metric)
 
         new_avg_val_loss, new_avg_val_metric = loss_meter.avg, metric_meter.avg
