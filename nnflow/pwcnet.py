@@ -829,6 +829,24 @@ class Warp(nn.Module):
         return out * mask
 
 
+class CustomCorrelationSampler(nn.Module):
+
+    def __init__(self, padding=0, max_displacement=4):
+        super(CustomCorrelationSampler, self).__init__()
+        self.corr_block = SpatialCorrelationSampler(
+            kernel_size=1, 
+            patch_size=2*max_displacement+1, 
+            padding=padding
+        )
+        self.leakyRELU = nn.LeakyReLU(0.1)
+
+    def forward(self, feat1, feat2):
+        corr = self.corr_block(feat1, feat2)
+        corr = corr.view(corr.shape[0], -1, corr.shape[3], corr.shape[4])
+        corr = self.leakyRELU(corr)
+        return corr
+
+
 class PWCNetDecoder(nn.Module):
     """The Decoder of PWC-Net.
     The decoder of PWC-Net which outputs flow predictions and features.
@@ -951,7 +969,7 @@ class PWCNetDecoder(nn.Module):
         if self.ezflow_cfg.SIMILARITY.TYPE == 'CorrelationLayer':
             self.corr_block = CorrelationLayer(pad_size=4, max_displacement=md)
         elif self.ezflow_cfg.SIMILARITY.TYPE == 'SpatialCorrelation':    
-            self.corr_block = SpatialCorrelationSampler(kernel_size=1, patch_size=2*md+1, padding=pad_size)
+            self.corr_block = CustomCorrelationSampler(padding=pad_size, max_displacement=md)
         else:
             print("invalid correlation layer type")
         # self.corr_block = CorrBlock(
