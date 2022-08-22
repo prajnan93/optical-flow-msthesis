@@ -40,7 +40,7 @@ class CustomTrainer(Trainer):
                 flow_up, flow_preds = self.model(img1, img2)
                 loss = self.loss_fn(flow_preds, target)
                 loss_meter.update(loss.item())
-                metric = self._calculate_metric(flow_up, target)
+                metric = self._calculate_metric(flow_up, target / 20.0)
                 metric_meter.update(metric)
 
         new_avg_val_loss, new_avg_val_metric = loss_meter.avg, metric_meter.avg
