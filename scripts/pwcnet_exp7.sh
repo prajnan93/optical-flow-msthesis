@@ -12,7 +12,7 @@ module load cuda/11.3
 cd ../
 python train.py --model "PWCNetV2" \
                 --model_cfg "./configs/pwcnet/models/nnflow_v2.yaml" \
-                --train_cfg "./configs/pwcnet/trainer/chairs_v4.yaml" \
+                --train_cfg "./configs/pwcnet/trainer/chairs_v4_2.yaml" \
                 --device "0" \
                 --log_dir "../results/pwcnet/logs/exp7" \
                 --ckpt_dir "../results/pwcnet/ckpts/exp7" \
