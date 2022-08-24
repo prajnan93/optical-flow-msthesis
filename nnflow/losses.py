@@ -122,6 +122,7 @@ def multi_level_flow_loss(loss_function,
 
     for level in weights.keys():
 
+        #print(f"level: {level} target : {target_div.shape}")
         # predict more than one flow map at one level
         cur_pred = preds_dict[level] if isinstance(
             preds_dict[level], (tuple, list)) else [preds_dict[level]]
@@ -146,6 +147,8 @@ def multi_level_flow_loss(loss_function,
             cur_valid = valid
 
         loss_map = torch.zeros_like(cur_target[:, 0, ...])
+        #print(f"scale factor : {scale_factor.shape} downsampled target : {cur_target.shape}")
+        #print()
 
         for i_pred in cur_pred:
 
@@ -164,6 +167,7 @@ def multi_level_flow_loss(loss_function,
             cur_target = torch.einsum('b c h w, c -> b c h w', cur_target,
                                       scale_factor)
 
+            #print(f"pred: {i_pred.shape} target: {cur_target.shape} loss map: {loss_map.shape} weight: {cur_weight}")
             loss_map += loss_function(i_pred, cur_target, **kwargs) * cur_valid
 
             if reduction == 'mean':
@@ -171,6 +175,9 @@ def multi_level_flow_loss(loss_function,
             elif reduction == 'sum':
                 loss += loss_map.sum() / b * cur_weight
 
+        #print(40*'-')
+
+    #print(f"total preds: {num_preds}")
     return loss / num_preds
 
 
@@ -287,7 +294,7 @@ class MultiLevelEPE(nn.Module):
             }
 
         # for level in preds_dict:
-        #     print(f"{level} {preds_dict[level].shape}")
+        #     #print(f"{level} {preds_dict[level].shape}")
 
         return multi_level_flow_loss(
             endpoint_error,
@@ -380,6 +387,8 @@ class MultiScaleLossV2(nn.Module):
         self,
         norm="l1",
         weights=(1, 0.5, 0.25),
+        average="mean",
+        resize_flow="upsample",
         extra_mask=None,
         use_valid_range=True,
         valid_range=None,
@@ -393,12 +402,16 @@ class MultiScaleLossV2(nn.Module):
         self.extra_mask = extra_mask
         self.use_valid_range = use_valid_range
         self.valid_range = valid_range
+        self.average = average
+        self.resize_flow = resize_flow
 
     @classmethod
     def from_config(cls, cfg):
         return {
             "norm": cfg.NORM,
             "weights": cfg.WEIGHTS,
+            "average": cfg.AVERAGE,
+            "resize_flow": cfg.RESIZE_FLOW,
             "extra_mask": cfg.EXTRA_MASK,
             "use_valid_range": cfg.USE_VALID_RANGE,
             "valid_range": cfg.VALID_RANGE,
@@ -408,14 +421,14 @@ class MultiScaleLossV2(nn.Module):
 
         if isinstance(preds, dict):
             #flow2, flow3, flow4, flow5, flow6
-            pred = [preds['level2'],preds['level3'],preds['level4'],preds['level5'],preds['level6']]
+            pred = [preds['level6'],preds['level5'],preds['level4'],preds['level4'],preds['level2']]
 
         if label.shape[1] == 3:
             """Ignore valid mask for Multiscale Loss."""
             label = label[:, :2, :, :]
 
         loss = 0
-        h, w = label.size()[-2:]
+        b, c, h, w = label.size()
 
         if (
             (type(pred) is not tuple)
@@ -426,44 +439,63 @@ class MultiScaleLossV2(nn.Module):
 
         for i, level_pred in enumerate(pred):
 
-            real_flow = F.interpolate(
-                level_pred, (h, w), mode="bilinear", align_corners=True
-            )
-            real_flow[:, 0, :, :] = real_flow[:, 0, :, :] * (w / level_pred.shape[3])
-            real_flow[:, 1, :, :] = real_flow[:, 1, :, :] * (h / level_pred.shape[2])
+            #print(f"pred: {level_pred.shape} target: {label.shape}")
+
+            if self.resize_flow.lower() == "upsample":
+                real_flow = F.interpolate(
+                    level_pred, (h, w), mode="bilinear", align_corners=True
+                )
+                real_flow[:, 0, :, :] = real_flow[:, 0, :, :] * (w / level_pred.shape[3])
+                real_flow[:, 1, :, :] = real_flow[:, 1, :, :] * (h / level_pred.shape[2])
+                target = label
+            
+            elif self.resize_flow.lower() == "downsample":
+                # down sample ground truth following irr solution
+                # https://github.com/visinf/irr/blob/master/losses.py#L16
+                b,c,h,w = level_pred.shape
+
+                target = F.adaptive_avg_pool2d(label, [h, w])
+                real_flow = level_pred
+
 
             if self.norm == "l2":
-                loss_value = torch.norm(real_flow - label, p=2, dim=1)
+                loss_value = torch.norm(real_flow - target, p=2, dim=1)
 
             elif self.norm == "robust":
-                loss_value = (real_flow - label).abs().sum(dim=1) + 1e-8
+                loss_value = (real_flow - target).abs().sum(dim=1) + 1e-8
                 loss_value = loss_value**0.4
 
             elif self.norm == "l1":
-                loss_value = (real_flow - label).abs().sum(dim=1)
+                loss_value = (real_flow - target).abs().sum(dim=1)
 
             if self.use_valid_range and self.valid_range is not None:
 
                 with torch.no_grad():
-                    mask = (label[:, 0, :, :].abs() <= self.valid_range[i][1]) & (
-                        label[:, 1, :, :].abs() <= self.valid_range[i][0]
+                    mask = (target[:, 0, :, :].abs() <= self.valid_range[i][1]) & (
+                        target[:, 1, :, :].abs() <= self.valid_range[i][0]
                     )
             else:
                 with torch.no_grad():
-                    mask = torch.ones(label[:, 0, :, :].shape).type_as(label)
+                    mask = torch.ones(target[:, 0, :, :].shape).type_as(target)
+
+            #print(f"pred: {real_flow.shape} target: {target.shape} loss map: {loss_value.shape} weight: {self.weights[i]}")
 
             loss_value = loss_value * mask.float()
 
             if self.extra_mask is not None:
                 val = self.extra_mask > 0
                 loss_value = loss_value[val]
+                
+            if self.average.lower() ==  "mean":  
                 level_loss = loss_value.mean() * self.weights[i]
 
-            else:
-                level_loss = loss_value.mean() * self.weights[i]
+            elif self.average.lower() ==  "sum":
+                level_loss = loss_value.sum() / b * self.weights[i]
 
             loss += level_loss
+            #print(40*'-')
 
+        #print(f"loss: {loss} total preds: {len(pred)}")
         loss = loss / len(pred)
 
         return loss
