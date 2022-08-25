@@ -380,7 +380,7 @@ def main():
     
 
     if training_cfg.DISTRIBUTED.USE is True:
-        trainer = DistributedTrainer(
+        trainer = CustomDistributedTrainer(
             training_cfg, 
             model, 
             train_loader_creator = train_loader_creator, 
