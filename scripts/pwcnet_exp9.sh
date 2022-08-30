@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=120:00:00
+#SBATCH --time=168:00:00
 #SBATCH --job-name=pwcnet_exp9
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
