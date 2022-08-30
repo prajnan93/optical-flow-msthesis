@@ -169,10 +169,6 @@ def main():
     if args.num_steps is not None:
         training_cfg.NUM_STEPS = args.num_steps
 
-        if training_cfg.SCHEDULER.NAME == "OneCycleLR":
-            training_cfg.SCHEDULER.PARAMS.total_steps = args.num_steps + 100
-
-
     if args.epochs is not None:
         training_cfg.EPOCHS = args.epochs
 
