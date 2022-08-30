@@ -90,12 +90,14 @@ class CustomDistributedTrainer(DistributedTrainer):
         new_avg_val_loss, new_avg_val_metric = loss_meter.avg, metric_meter.avg
 
         print("\n", "-" * 80)
-        self.writer.add_scalar("avg_validation_loss", new_avg_val_loss, iterations)
+        if self._is_main_process():
+            self.writer.add_scalar("avg_validation_loss", new_avg_val_loss, iterations)
+            self.writer.add_scalar("avg_validation_metric", new_avg_val_metric, iterations)
+
         print(
             f"\n{iter_type} {iterations}: Average validation loss = {new_avg_val_loss}"
         )
-
-        self.writer.add_scalar("avg_validation_metric", new_avg_val_metric, iterations)
+        
         print(
             f"{iter_type} {iterations}: Average validation metric = {new_avg_val_metric}\n"
         )
