@@ -1,7 +1,7 @@
 import argparse
+import torch
 
 from ezflow.data import DataloaderCreator
-from ezflow.engine import eval_model
 from ezflow.models import build_model
 from nnflow import *
 
@@ -31,13 +31,16 @@ def main():
     parser.add_argument(
         "--batch_size", type=int, default=8, help="Evaluate batch size"
     )
+    parser.add_argument(
+        "--pad_divisor", type=int, default=1, help="Padding divisor for dataset"
+    )
 
     args = parser.parse_args()
 
     val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=1, pin_memory=True)
     
     if args.dataset.lower() == "flyingchairs":
-        val_loader_creator.add_FlyingChairs(
+        val_loader.add_FlyingChairs(
             root_dir="../../../Datasets/FlyingChairs_release/data",
             split="validation",
             crop=True,
@@ -47,7 +50,7 @@ def main():
         )
 
     if args.dataset.lower() == "flyingthings3d":
-        val_loader_creator.add_FlyingThings3D(
+        val_loader.add_FlyingThings3D(
             root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
             dstype="frames_cleanpass",
             split="validation",
@@ -56,7 +59,7 @@ def main():
             crop_size=args.crop_size,
             augment=False,
         )
-        val_loader_creator.add_FlyingThings3D(
+        val_loader.add_FlyingThings3D(
             root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
             dstype="frames_finalpass",
             split="validation",
@@ -67,7 +70,7 @@ def main():
         )
 
     if args.dataset.lower() == "sceneflow":
-        val_loader_creator.add_SceneFlow(
+        val_loader.add_SceneFlow(
             root_dir="../../../Datasets/SceneFlow",
             crop=True,
             crop_type="center",
@@ -76,22 +79,22 @@ def main():
         )
 
     if args.dataset.lower() == "sintel_clean":
-        val_loader_creator.add_MPISintel(
+        val_loader.add_MPISintel(
             root_dir="../../../Datasets/MpiSintel/",
             split="training",
             dstype="clean",
-            crop=True,
+            crop=False,
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
         )
 
     if args.dataset.lower() == "sintel_final":
-        val_loader_creator.add_MPISintel(
+        val_loader.add_MPISintel(
             root_dir="../../../Datasets/MpiSintel/",
             split="training",
             dstype="final",
-            crop=True,
+            crop=False,
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
@@ -101,11 +104,18 @@ def main():
     model = build_model(
         args.model, 
         cfg_path=args.model_cfg, 
-        custom_cfg=True, 
-        weights_path=args.model_weights_path
+        custom_cfg=True
     )
 
-    eval_model(model, val_loader, device='all')
+    state_dict = torch.load(args.model_weights_path, map_location=torch.device('cpu'))
+    if "model_state_dict" in state_dict:
+        model_state_dict = state_dict["model_state_dict"]
+    else:
+        model_state_dict = state_dict
+
+    model.load_state_dict(model_state_dict)
+
+    eval_model(model, val_loader.get_dataloader(), device='all', pad_divisor=args.pad_divisor)
 
 
 if __name__ == "__main__":
