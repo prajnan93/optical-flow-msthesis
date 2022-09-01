@@ -20,7 +20,7 @@ python train.py --model "PWCNetV2" \
                 --ckpt_dir "../results/pwcnet/ckpts/exp13_2" \
                 --batch_size 6 \
                 --num_steps 100000 \
-                --train_crop_size 400 720 \
-                --val_crop_size 400 720 \
+                --train_crop_size 384 768 \
+                --val_crop_size 384 768 \
                 --resume_ckpt '../results/pwcnet/ckpts/exp13_1/pwcnetv2_step99000.pth' \
                 --resume_iteration 99900 \
