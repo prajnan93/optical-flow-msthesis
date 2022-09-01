@@ -1,5 +1,5 @@
 import argparse
-
+import torch
 from ezflow.data import DataloaderCreator
 from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
@@ -17,7 +17,7 @@ def main():
         "--model", type=str, required=True, help="Name of the model to train"
     )
     parser.add_argument(
-        "--model_cfg", type=str, required=False, help="Path to the model config file"
+        "--model_cfg", type=str, required=True, help="Path to the model config file"
     )
     parser.add_argument(
         "--log_dir",
@@ -55,9 +55,9 @@ def main():
         help="Path to ckpt for resuming training",
     )
     parser.add_argument(
-        "--resume_epochs",
+        "--resume_iteration",
         type=int,
-        default=None,
+        default=0,
         help="Number of epochs to train after resumption",
     )
     parser.add_argument(
@@ -368,11 +368,16 @@ def main():
             augment=False,
         )
 
-    if args.model_cfg is not None:
-        model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
-    else:
-        model = build_model(args.model, default=True)
+    model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
 
+    if args.resume_ckpt is not None:
+        state_dict = torch.load(args.model_weights_path, map_location=torch.device('cpu'))
+        if "model_state_dict" in state_dict:
+            model_state_dict = state_dict["model_state_dict"]
+        else:
+            model_state_dict = state_dict
+        
+        model.load_state_dict(model_state_dict)
     
 
     if training_cfg.DISTRIBUTED.USE is True:
@@ -383,16 +388,8 @@ def main():
             val_loader_creator = val_loader_creator
         )
 
-        if args.resume:
-            assert (
-                args.resume_ckpt is not None
-            ), "Please provide a ckpt to resume training from"
-            print("Resuming distributed training")
-            trainer.resume_training(args.resume_ckpt)
 
-        else:
-            print("Distributed training")
-            trainer.train()
+        trainer.train(start_iteration=args.resume_iteration)
 
     else:
         trainer = CustomTrainer(
@@ -402,16 +399,7 @@ def main():
             val_loader = val_loader_creator.get_dataloader()
         )
         
-        if args.resume:
-            assert (
-                args.resume_ckpt is not None
-            ), "Please provide a ckpt to resume training from"
-            print("Resuming training")
-            trainer.resume_training(args.resume_ckpt)
-
-        else:
-            print("Training")
-            trainer.train()
+        trainer.train(start_iteration=args.resume_iteration)
 
 
 if __name__ == "__main__":
