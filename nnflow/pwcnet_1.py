@@ -1117,3 +1117,4 @@ class PWCNetV2(BaseModule):
             flow_result = flow_result * 20.0
 
             return flow_result, flow_pred
+
