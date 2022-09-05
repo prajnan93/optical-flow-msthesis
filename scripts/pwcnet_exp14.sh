@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --time=168:00:00
+#SBATCH --time=08:00:00
 #SBATCH --job-name=pwcnet_exp14
-#SBATCH --partition=jiang
+#SBATCH --partition=gpu
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a6000:1
+#SBATCH --gres=gpu:v100-sxm2:1
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/pwcnet/outs/exp14.out
 
@@ -12,7 +12,7 @@
 
 module load cuda/11.3
 cd ../
-python train.py --model "PWCNetV2" \
+python train.py --model "PWCNetV3" \
                 --model_cfg "./configs/pwcnet/models/ezflow.yaml" \
                 --train_cfg "./configs/pwcnet/trainer/chairs_v4_5.yaml" \
                 --device "0" \

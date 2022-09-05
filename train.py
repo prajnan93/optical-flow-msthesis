@@ -371,7 +371,7 @@ def main():
     model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
 
     if args.resume_ckpt is not None:
-        state_dict = torch.load(args.model_weights_path, map_location=torch.device('cpu'))
+        state_dict = torch.load(args.resume_ckpt, map_location=torch.device('cpu'))
         if "model_state_dict" in state_dict:
             model_state_dict = state_dict["model_state_dict"]
         else:

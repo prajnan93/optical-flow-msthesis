@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --time=168:00:00
+#SBATCH --time=08:00:00
 #SBATCH --job-name=pwcnet_exp13_2
-#SBATCH --partition=jiang
+#SBATCH --partition=gpu
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a5000:1
+#SBATCH --gres=gpu:v100-sxm2:1
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/pwcnet/outs/exp13_2.out
 

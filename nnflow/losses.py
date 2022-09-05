@@ -422,9 +422,13 @@ class MultiScaleLossV2(nn.Module):
         if isinstance(preds, dict):
             #flow2, flow3, flow4, flow5, flow6
             pred = [preds['level6'],preds['level5'],preds['level4'],preds['level4'],preds['level2']]
+        else:
+            pred = preds
 
+        valid = None
         if label.shape[1] == 3:
             """Ignore valid mask for Multiscale Loss."""
+            valid = label[:, 2:, :, :]
             label = label[:, :2, :, :]
 
         loss = 0
