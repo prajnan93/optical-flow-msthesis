@@ -26,7 +26,24 @@ def main():
         type=int,
         nargs="+",
         default=None,
+        required=True,
         help="Crop size for validation images",
+    )
+    parser.add_argument(
+        "--mean",
+        type=int,
+        nargs="+",
+        default=None,
+        required=True,
+        help="mean for normalization",
+    )
+    parser.add_argument(
+        "--std",
+        type=int,
+        nargs="+",
+        default=None,
+        required=True,
+        help="standard deviation for normalization",
     )
     parser.add_argument(
         "--batch_size", type=int, default=8, help="Evaluate batch size"
@@ -36,6 +53,8 @@ def main():
     )
 
     args = parser.parse_args()
+
+    norm_params = {"use":True, "mean":args.mean, "std":args.std}
 
     val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=1, pin_memory=True)
     
@@ -47,6 +66,7 @@ def main():
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
+            norm_params=norm_params
         )
 
     if args.dataset.lower() == "flyingthings3d":
@@ -58,6 +78,7 @@ def main():
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
+            norm_params=norm_params
         )
         val_loader.add_FlyingThings3D(
             root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
@@ -67,6 +88,7 @@ def main():
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
+            norm_params=norm_params
         )
 
     if args.dataset.lower() == "sceneflow":
@@ -76,6 +98,7 @@ def main():
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
+            norm_params=norm_params
         )
 
     if args.dataset.lower() == "sintel_clean":
@@ -87,6 +110,7 @@ def main():
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
+            norm_params=norm_params
         )
 
     if args.dataset.lower() == "sintel_final":
@@ -98,6 +122,7 @@ def main():
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
+            norm_params=norm_params
         )
 
 

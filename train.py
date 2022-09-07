@@ -4,7 +4,7 @@ from ezflow.data import DataloaderCreator
 from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
 
-from nnflow import *
+from nnflow import eval_model
 
 def main():
 
@@ -227,6 +227,7 @@ def main():
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "flyingthings3d":
@@ -244,6 +245,7 @@ def main():
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
         train_loader_creator.add_FlyingThings3D(
             root_dir=training_cfg.DATA.TRAIN_DATASET.ROOT_DIR,
@@ -259,6 +261,7 @@ def main():
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "sceneflow":
@@ -275,6 +278,7 @@ def main():
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "mpisintel":
@@ -291,6 +295,7 @@ def main():
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "kitti":
@@ -307,6 +312,7 @@ def main():
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "autoflow":
@@ -323,6 +329,7 @@ def main():
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     # --------------------- VALIDATION DATASETS -----------------------------------#
@@ -334,6 +341,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "flyingthings3d":
@@ -345,6 +353,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
         val_loader_creator.add_FlyingThings3D(
             root_dir=training_cfg.DATA.VAL_DATASET.ROOT_DIR,
@@ -354,6 +363,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "sceneflow":
@@ -363,6 +373,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "mpisintel":
@@ -374,6 +385,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "kitti":
@@ -383,6 +395,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "autoflow":
@@ -392,6 +405,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
     model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
@@ -407,7 +421,7 @@ def main():
     
 
     if training_cfg.DISTRIBUTED.USE is True:
-        trainer = CustomDistributedTrainer(
+        trainer = DistributedTrainer(
             training_cfg, 
             model, 
             train_loader_creator = train_loader_creator, 
@@ -418,7 +432,7 @@ def main():
         trainer.train(start_iteration=args.start_iteration)
 
     else:
-        trainer = CustomTrainer(
+        trainer = Trainer(
             training_cfg, 
             model, 
             train_loader = train_loader_creator.get_dataloader(), 

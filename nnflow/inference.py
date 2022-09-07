@@ -94,7 +94,7 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
 
             start_time = time.time()
 
-            pred, flows = model(img1, img2)
+            output = model(img1, img2)
 
             if torch.cuda.is_available():
                 torch.cuda.synchronize()
@@ -102,7 +102,7 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
             end_time = time.time()
             times.append(end_time - start_time)
 
-            pred = padder.unpad(pred)
+            pred = padder.unpad(output["flow_upsampled"])
             flow = pred * flow_scale
 
             metric = metric_fn(flow, target)
