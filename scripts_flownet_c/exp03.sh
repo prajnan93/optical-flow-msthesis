@@ -15,7 +15,7 @@ module load cuda/11.3
 cd ../
 python train.py --model "FlowNetC" \
                 --model_cfg "./configs/flownet_c/models/flownet_c.yaml" \
-                --train_cfg "./configs/flownet_c/trainer/chairs_v1_0.yaml" \
+                --train_cfg "./configs/flownet_c/trainer/chairs_v2_0.yaml" \
                 --device "0" \
                 --log_dir "../results/flownet_c/logs/exp03" \
                 --ckpt_dir "../results/flownet_c/ckpts/exp03" \
