@@ -13,7 +13,7 @@
 module load cuda/11.3
 cd ../
 python train.py --model "PWCNet" \
-                --model_cfg "./configs/pwcnet/models/ezflow.yaml" \
+                --model_cfg "./configs/pwcnet/models/pwcnet.yaml" \
                 --train_cfg "./configs/pwcnet/trainer/chairs_v1_1.yaml" \
                 --device "0" \
                 --log_dir "../results/pwcnet/logs/exp02" \
