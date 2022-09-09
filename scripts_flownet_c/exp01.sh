@@ -8,11 +8,11 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/flownet_c/outs/exp01.out
 
-# PWCNet training with RAFT Augmentation, Training settings and PWCNet Normalization
+# FlowNetC training with RAFT Augmentation, Training settings and PWCNet Normalization
 
 module load cuda/11.3
 cd ../
-python train.py --model "PWCNet" \
+python train.py --model "FlowNetC" \
                 --model_cfg "./configs/flownet_c/models/flownet_c.yaml" \
                 --train_cfg "./configs/flownet_c/trainer/chairs_v1_0.yaml" \
                 --device "0" \
