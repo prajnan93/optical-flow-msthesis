@@ -9,6 +9,7 @@
 #SBATCH --output=../../results/flownet_c/outs/exp01.out
 
 # FlowNetC training with RAFT Augmentation, Training settings and PWCNet Normalization
+# FLOW_SCALE_FACTOR=20
 
 module load cuda/11.3
 cd ../
