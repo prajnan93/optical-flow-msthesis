@@ -43,7 +43,7 @@ DATA:
         NOISE_PARAMS: {
           "enabled": True,
           "aug_prob": 1,
-          "noise_std_range": 0.06 * 255.0 
+          "noise_std_range": 0.06
         }
         AUTOFLOW_SPATIAL_PARAMS: {
           "enabled": True,
