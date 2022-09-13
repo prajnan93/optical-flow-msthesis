@@ -46,7 +46,7 @@ DATA:
           "noise_std_range": 0.06 * 255.0 
         }
         AUTOFLOW_SPATIAL_PARAMS: {
-          "enabled": True
+          "enabled": True,
           "scale": [0.3, 0.03, 0.1],
           "rot": [0.4, 0.03],
           "trans": [0.4, 0.03],
