@@ -11,7 +11,7 @@ DATA:
   APPEND_VALID_MASK: False
   TRAIN_CROP_SIZE: [384, 448]
   VAL_CROP_SIZE: [384, 448]
-  NORM_PARAMS: {"use":True, "mean":[127.5, 127.5, 127.5], "std":[127.5, 127.5, 127.5]}
+  NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
   AUGMENTATION:
     USE: True
     PARAMS:
@@ -71,12 +71,12 @@ CRITERION:
   PARAMS:
     norm: "l2" 
     weights: [0.32, 0.08, 0.02, 0.01, 0.005]
-    average: "sum"
-    resize_flow: "downsample" 
+    average: "mean"
+    resize_flow: "upsample" 
 GRAD_CLIP: 
   USE: True
   VALUE: 1.0
-TARGET_SCALE_FACTOR: 20.0
+TARGET_SCALE_FACTOR: 1.0
 MIXED_PRECISION: False
 DEVICE: "0"
 DISTRIBUTED:
