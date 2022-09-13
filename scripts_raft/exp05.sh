@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/raft/outs/exp05.out
 
-# raft training with RAFT Augmentation, Training settings and Normalization
+# RAFT training with Autoflow Augmentation, RAFT Training settings and Normalization
 # noise aug_prob: 1
 # out of boundary cropping: True 
 

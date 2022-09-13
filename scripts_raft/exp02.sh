@@ -8,8 +8,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/raft/outs/exp02.out
 
-# raft training with RAFT Augmentation, Training settings and Normalization
-# noise aug_prob:0.5
+# RAFT training with Autoflow Augmentation, RAFT Training settings and Normalization
+# noise aug_prob: 0.5
 # out of boundary cropping: False
 
 module load cuda/11.3
