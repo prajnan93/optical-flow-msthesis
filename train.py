@@ -224,6 +224,8 @@ def main():
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
                 "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
                 "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
@@ -242,6 +244,8 @@ def main():
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
                 "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
                 "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
@@ -258,6 +262,8 @@ def main():
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
                 "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
                 "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
@@ -275,6 +281,8 @@ def main():
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
                 "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
                 "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
@@ -292,6 +300,8 @@ def main():
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
                 "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
                 "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
@@ -309,6 +319,8 @@ def main():
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
                 "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
                 "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
@@ -326,6 +338,8 @@ def main():
                 "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
                 "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
                 "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
                 "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
                 "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
             },
