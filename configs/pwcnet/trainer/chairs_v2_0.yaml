@@ -1,0 +1,112 @@
+DATA:
+  TRAIN_DATASET:
+    NAME: "flyingchairs"
+    ROOT_DIR: "../../../Datasets/FlyingChairs_release/data"
+  VAL_DATASET:
+    NAME: "flyingchairs"
+    ROOT_DIR: "../../../Datasets/FlyingChairs_release/data" 
+  BATCH_SIZE: 10
+  NUM_WORKERS: 1
+  PIN_MEMORY: True
+  APPEND_VALID_MASK: False
+  TRAIN_CROP_SIZE: [384, 448]
+  VAL_CROP_SIZE: [384, 448]
+  NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
+  AUGMENTATION:
+    USE: True
+    PARAMS:
+      TRAINING:
+        SPATIAL_AUG_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0., 
+          "stretch_prob": 0, 
+          "min_scale": 0, 
+          "max_scale": 0, 
+          "max_stretch": 0, 
+          "flip": True, 
+          "h_flip_prob": 0.5, 
+          "v_flip_prob": 0.1
+        }
+        COLOR_AUG_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0.2, 
+          "brightness": 0.4, 
+          "contrast": 0.4, 
+          "saturation": 0.4, 
+          "hue": 0.15915494309189535
+        }
+        ERASER_AUG_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0.5,
+          "bounds": [50, 100]
+        }
+        NOISE_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0.5,
+          "noise_std_range": 0.06 * 255.0 
+        }
+        AUTOFLOW_SPATIAL_PARAMS: {
+          "enabled": True
+          "scale": [0.3, 0.03, 0.1],
+          "rot": [0.4, 0.03],
+          "trans": [0.4, 0.03],
+          "squeeze": [0.3, 0.],
+          "black": False
+        }
+        TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+      VALIDATION:
+        SPATIAL_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        COLOR_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ERASER_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+OPTIMIZER:
+  NAME: AdamW
+  LR: 0.0004
+  PARAMS:
+    weight_decay: 0.0001
+    betas: [0.9, 0.999]
+    eps: 1.e-08
+    amsgrad: False
+SCHEDULER:
+  USE: True
+  NAME: OneCycleLR
+  PARAMS:
+    max_lr: 0.0004
+    total_steps: 100100
+    pct_start: 0.05
+    cycle_momentum: False
+    anneal_strategy: linear
+CRITERION:
+  CUSTOM: True
+  NAME: MultiScaleLoss
+  PARAMS:
+    norm: "l2" 
+    weights: [0.32, 0.08, 0.02, 0.01, 0.005]
+    average: "sum"
+    resize_flow: "downsample" 
+GRAD_CLIP: 
+  USE: True
+  VALUE: 1.0
+TARGET_SCALE_FACTOR: 20.0
+MIXED_PRECISION: False
+DEVICE: "0"
+DISTRIBUTED:
+  USE: False
+  WORLD_SIZE: 2
+  BACKEND: nccl
+  MASTER_ADDR: localhost
+  MASTER_PORT: "12355"
+LOG_DIR: "./logs"
+LOG_ITERATIONS_INTERVAL: 100
+CKPT_DIR: "./ckpts"
+CKPT_INTERVAL: 1000
+VALIDATE_INTERVAL: 1000
+VALIDATE_ON: metric
+EPOCHS: null
+NUM_STEPS: 100100
+RESUME_TRAINING:
+  CONSOLIDATED_CKPT: null
+  EPOCHS: 100
+  START_EPOCH: null
