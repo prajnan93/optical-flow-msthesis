@@ -17,7 +17,7 @@ DATA:
     PARAMS:
       TRAINING:
         SPATIAL_AUG_PARAMS: {
-          "enable": True,
+          "enabled": True,
           "aug_prob": 0.8, 
           "stretch_prob": 0.8, 
           "min_scale": -0.1, 
@@ -28,7 +28,7 @@ DATA:
           "v_flip_prob": 0.1
         }
         COLOR_AUG_PARAMS: {
-          "enable": True,
+          "enabled": True,
           "aug_prob": 0.2, 
           "brightness": 0.4, 
           "contrast": 0.4, 
@@ -36,18 +36,18 @@ DATA:
           "hue": 0.15915494309189535
         }
         ERASER_AUG_PARAMS: {
-          "enable": True,
+          "enabled": True,
           "aug_prob": 0.5,
           "bounds": [50, 100]
         }
-        TRANSLATE_PARAMS: {"enable": False, "aug_prob": 0.0}
-        ROTATE_PARAMS: {"enable": False, "aug_prob": 0.0}
+        TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
       VALIDATION:
-        SPATIAL_AUG_PARAMS: {"enable": False, "aug_prob": 0.0}
-        COLOR_AUG_PARAMS: {"enable": False, "aug_prob": 0.0}
-        ERASER_AUG_PARAMS: {"enable": False, "aug_prob": 0.0}
-        TRANSLATE_PARAMS: {"enable": False, "aug_prob": 0.0}
-        ROTATE_PARAMS: {"enable": False, "aug_prob": 0.0}
+        SPATIAL_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        COLOR_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ERASER_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
 OPTIMIZER:
   NAME: AdamW
   LR: 0.0004
