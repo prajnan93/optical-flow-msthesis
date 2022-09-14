@@ -4,3 +4,4 @@
 # from .trainer import CustomTrainer, CustomDistributedTrainer
 from .inference import eval_model
 from .flow_viz import flow_to_image
+from .perceiver_io import Perceiver
