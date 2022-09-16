@@ -120,7 +120,7 @@ class Perceiver(BaseModule):
         img = F.pad(img, (1,1,1,1), mode="constant")
         patches = img.unfold(2, kernel_size[0], stride[0]).unfold(3, kernel_size[1], stride[1])
         patches = rearrange(patches, 'n c h w k1 k2 -> n (c k1 k2) h w')
-        patches = patches.contiguous()
+        # patches = patches.contiguous()
         return patches
         
     def forward(self, img1, img2):
@@ -132,11 +132,12 @@ class Perceiver(BaseModule):
         
         patches = torch.concat([patches1, patches2], dim=1)
         
-        perceiver_outputs = self.perceiver(
-            inputs=patches
-        )
+        flow = self.perceiver(
+            inputs=patches,
+            return_dict=False
+        )[0]
         
-        flow = rearrange(perceiver_outputs.logits, 'n h w c -> n c h w')
+        flow = rearrange(flow, 'n h w c -> n c h w')
         
         output = {"flow_preds": flow}
         
