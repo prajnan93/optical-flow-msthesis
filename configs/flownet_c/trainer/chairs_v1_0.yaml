@@ -40,6 +40,19 @@ DATA:
           "aug_prob": 0.5,
           "bounds": [50, 100]
         }
+        NOISE_PARAMS: {
+          "enabled": False,
+          "aug_prob": 0.5,
+          "noise_std_range": 0.06 
+        }
+        AUTOFLOW_SPATIAL_PARAMS: {
+          "enabled": False,
+          "scale": [0.3, 0.03, 0.1],
+          "rot": [0.4, 0.03],
+          "trans": [0.4, 0.03],
+          "squeeze": [0.3, 0.],
+          "black": False
+        }
         TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
         ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
       VALIDATION:
