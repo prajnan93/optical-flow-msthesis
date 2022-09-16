@@ -64,6 +64,7 @@ class Perceiver(BaseModule):
     https://huggingface.co/docs/transformers/v4.21.3/en/model_doc/perceiver#transformers.PerceiverForOpticalFlow
     https://github.com/huggingface/transformers/blob/v4.21.3/src/transformers/models/perceiver/modeling_perceiver.py#L1612
     
+    example: https://github.com/NielsRogge/Transformers-Tutorials/blob/master/Perceiver/Perceiver_for_Optical_Flow.ipynb
 
     Parameters
     ----------
