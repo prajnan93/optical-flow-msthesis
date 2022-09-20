@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/perceiver/outs/exp01.out
 
-# Perceiver IO training with perceiver Augmentation, Training settings and Normalization
+# Perceiver IO training with RAFT Augmentation, Training settings and Normalization
 
 module load cuda/11.3
 cd ../
