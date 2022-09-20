@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from einops import rearrange
-
 from ezflow.models import MODEL_REGISTRY
 from ezflow.config import configurable
 from ezflow.modules import BaseModule
@@ -116,28 +114,36 @@ class Perceiver(BaseModule):
         )
         
     
-    def _extract_patches(self, img, kernel_size=(3,3), stride=(1,1)):
-        img = F.pad(img, (1,1,1,1), mode="constant")
-        patches = img.unfold(2, kernel_size[0], stride[0]).unfold(3, kernel_size[1], stride[1])
-        patches = rearrange(patches, 'n c h w k1 k2 -> n (c k1 k2) h w')
-        # patches = patches.contiguous()
-        return patches
+    # source: https://discuss.pytorch.org/t/tf-extract-image-patches-in-pytorch/43837/9
+    def _extract_image_patches(self, x, kernel=3, stride=1, dilation=1):
+        # Do TF 'SAME' Padding
+        b,c,h,w = x.shape
+        h2 = math.ceil(h / stride)
+        w2 = math.ceil(w / stride)
+        pad_row = (h2 - 1) * stride + (kernel - 1) * dilation + 1 - h
+        pad_col = (w2 - 1) * stride + (kernel - 1) * dilation + 1 - w
+        x = F.pad(x, (pad_row//2, pad_row - pad_row//2, pad_col//2, pad_col - pad_col//2))
+
+        # Extract patches
+        patches = x.unfold(2, kernel, stride).unfold(3, kernel, stride)
+        patches = patches.permute(0,4,5,1,2,3).contiguous()
+        
+        return patches.view(b,-1,patches.shape[-2], patches.shape[-1])
         
     def forward(self, img1, img2):
-        patches1 = self._extract_patches(img1)
-        patches2 = self._extract_patches(img2)
         
-        patches1 = torch.unsqueeze(patches1, dim=1)
-        patches2 = torch.unsqueeze(patches2, dim=1)
+        B, C, H, W = img1.shape
         
-        patches = torch.concat([patches1, patches2], dim=1)
+        patches = self._extract_image_patches(torch.concat([img1, img2], dim=0))
+        _, C, H, W = patches.shape
+        patches = patches.view(B, -1, C, H, W)
         
         flow = self.perceiver(
             inputs=patches,
             return_dict=False
         )[0]
         
-        flow = rearrange(flow, 'n h w c -> n c h w')
+        flow = flow.permute(0, 3, 1, 2)
         
         output = {"flow_preds": flow}
         
