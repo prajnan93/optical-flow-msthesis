@@ -8,14 +8,16 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/flownet_c/outs/exp03.out
 
-# FlowNetC training with RAFT Augmentation, Training settings, PWCNet Normalization 
-# FLOW_SCALE_FACTOR=1.0 
+# FlowNetC training with Autoflow Augmentation, RAFT Training settings and FlownetC Normalization
+# noise aug_prob:1
+# out of boundary cropping: False 
+# FLOW_SCALE_FACTOR=20
 
 module load cuda/11.3
 cd ../
 python train.py --model "FlowNetC" \
                 --model_cfg "./configs/flownet_c/models/flownet_c.yaml" \
-                --train_cfg "./configs/flownet_c/trainer/chairs_v2_0.yaml" \
+                --train_cfg "./configs/flownet_c/trainer/chairs_v1_2.yaml" \
                 --device "0" \
                 --log_dir "../results/flownet_c/logs/exp03" \
                 --ckpt_dir "../results/flownet_c/ckpts/exp03" \

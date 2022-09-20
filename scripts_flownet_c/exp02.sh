@@ -8,7 +8,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/flownet_c/outs/exp02.out
 
-# FlowNetC training with RAFT Augmentation, Normalization and Training settings
+# FlowNetC training with Autoflow Augmentation, RAFT Training settings and FlownetC Normalization
+# noise aug_prob:0.5
 # FLOW_SCALE_FACTOR=20
 
 module load cuda/11.3

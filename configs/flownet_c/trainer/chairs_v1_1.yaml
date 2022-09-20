@@ -11,18 +11,18 @@ DATA:
   APPEND_VALID_MASK: False
   TRAIN_CROP_SIZE: [384, 448]
   VAL_CROP_SIZE: [384, 448]
-  NORM_PARAMS: {"use":True, "mean":[127.5, 127.5, 127.5], "std":[127.5, 127.5, 127.5]}
+  NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
   AUGMENTATION:
     USE: True
     PARAMS:
       TRAINING:
         SPATIAL_AUG_PARAMS: {
           "enabled": True,
-          "aug_prob": 0.8, 
-          "stretch_prob": 0.8, 
-          "min_scale": -0.1, 
-          "max_scale": 1.0, 
-          "max_stretch": 0.2, 
+          "aug_prob": 0., 
+          "stretch_prob": 0, 
+          "min_scale": 0, 
+          "max_scale": 0, 
+          "max_stretch": 0, 
           "flip": True, 
           "h_flip_prob": 0.5, 
           "v_flip_prob": 0.1
@@ -39,6 +39,19 @@ DATA:
           "enabled": True,
           "aug_prob": 0.5,
           "bounds": [50, 100]
+        }
+        NOISE_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0.5,
+          "noise_std_range": 0.06 
+        }
+        AUTOFLOW_SPATIAL_PARAMS: {
+          "enabled": True,
+          "scale": [0.3, 0.03, 0.1],
+          "rot": [0.4, 0.03],
+          "trans": [0.4, 0.03],
+          "squeeze": [0.3, 0.],
+          "black": False
         }
         TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
         ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
@@ -88,7 +101,7 @@ DISTRIBUTED:
 LOG_DIR: "./logs"
 LOG_ITERATIONS_INTERVAL: 100
 CKPT_DIR: "./ckpts"
-CKPT_INTERVAL: 1000
+CKPT_INTERVAL: 10000
 VALIDATE_INTERVAL: 1000
 VALIDATE_ON: metric
 EPOCHS: null
