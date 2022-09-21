@@ -10,7 +10,14 @@
 
 # Perceiver IO training with RAFT Augmentation, Training settings and Normalization
 
-module load cuda/11.3
+module load cuda/11.4
+
+# export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:32
+# export PYTORCH_NO_CUDA_MEMORY_CACHING=1
+
+# echo $PYTORCH_CUDA_ALLOC_CONF
+# echo $PYTORCH_NO_CUDA_MEMORY_CACHING
+
 cd ../
 python train.py --model "Perceiver" \
                 --model_cfg "./configs/perceiver/models/perceiver.yaml" \

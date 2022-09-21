@@ -9,7 +9,7 @@ from ezflow.config import configurable
 from ezflow.modules import BaseModule
 
 from transformers import PerceiverModel, PerceiverConfig
-from transformers.models.perceiver.modeling_perceiver import PerceiverImagePreprocessor, PerceiverTrainablePositionEncoding
+from transformers.models.perceiver.modeling_perceiver import PerceiverImagePreprocessor, PerceiverOpticalFlowDecoder, PerceiverTrainablePositionEncoding
 
 config_dict = {
       "_name_or_path": "deepmind/optical-flow-perceiver",
