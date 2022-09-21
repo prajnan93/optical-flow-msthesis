@@ -9,7 +9,7 @@ from ezflow.config import configurable
 from ezflow.modules import BaseModule
 
 from transformers import PerceiverModel, PerceiverConfig
-from transformers.models.perceiver.modeling_perceiver import PerceiverImagePreprocessor, PerceiverOpticalFlowDecoder
+from transformers.models.perceiver.modeling_perceiver import PerceiverImagePreprocessor, PerceiverTrainablePositionEncoding
 
 config_dict = {
       "_name_or_path": "deepmind/optical-flow-perceiver",
@@ -76,20 +76,20 @@ class Perceiver(BaseModule):
         super(Perceiver, self).__init__()
         self.cfg = config_dict
         
-        config = PerceiverConfig(**config_dict)
+        self.config = PerceiverConfig(**config_dict)
         
         fourier_position_encoding_kwargs_preprocessor = dict(
             num_bands=64,
-            max_resolution=config.train_size,
+            max_resolution=self.config.train_size,
             sine_only=False,
             concat_pos=True,
         )
         fourier_position_encoding_kwargs_decoder = dict(
-            concat_pos=True, max_resolution=config.train_size, num_bands=64, sine_only=False
+            concat_pos=True, max_resolution=self.config.train_size, num_bands=64, sine_only=False
         )
         
         image_preprocessor = PerceiverImagePreprocessor(
-            config,
+            self.config,
             prep_type="patches",
             spatial_downsample=1,
             conv_after_patching=True,
@@ -101,12 +101,12 @@ class Perceiver(BaseModule):
         )
         
         self.perceiver = PerceiverModel(
-            config,
+            self.config,
             input_preprocessor=image_preprocessor,
             decoder=PerceiverOpticalFlowDecoder(
-                config,
+                self.config,
                 num_channels=image_preprocessor.num_channels,
-                output_image_shape=config.train_size,
+                output_image_shape=self.config.train_size,
                 rescale_factor=100.0,
                 use_query_residual=False,
                 output_num_channels=2,
@@ -115,7 +115,32 @@ class Perceiver(BaseModule):
             ),
         )
         
-    
+        self._init_weights()
+        
+    def _init_weights(self):
+        
+        for module in self.modules():
+            if isinstance(module, (nn.Linear, nn.Conv2d)):
+                # Slightly different from the TF version which uses truncated_normal for initialization
+                # cf https://github.com/pytorch/pytorch/pull/5617
+                module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
+                if module.bias is not None:
+                    module.bias.data.zero_()
+            elif hasattr(module, "latents"):
+                module.latents.data.normal_(mean=0.0, std=self.config.initializer_range)
+            elif hasattr(module, "position_embeddings") and isinstance(module, PerceiverTrainablePositionEncoding):
+                module.position_embeddings.data.normal_(mean=0.0, std=self.config.initializer_range)
+            elif isinstance(module, nn.ParameterDict):
+                for modality in module.keys():
+                    module[modality].data.normal_(mean=0.0, std=self.config.initializer_range)
+            elif isinstance(module, nn.Embedding):
+                module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
+                if module.padding_idx is not None:
+                    module.weight.data[module.padding_idx].zero_()
+            elif isinstance(module, nn.LayerNorm):
+                module.bias.data.zero_()
+                module.weight.data.fill_(1.0)
+
     # source: https://discuss.pytorch.org/t/tf-extract-image-patches-in-pytorch/43837/9
     def _extract_image_patches(self, x, kernel=3, stride=1, dilation=1):
         # Do TF 'SAME' Padding
