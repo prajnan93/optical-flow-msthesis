@@ -83,11 +83,6 @@ def main():
         help="Enable mixed precision",
     )
     parser.add_argument(
-        "--use_scheduler",
-        action="store_true",
-        help="Enable scheduler",
-    )
-    parser.add_argument(
         "--freeze_batch_norm",
         action="store_true",
         help="Sets all batch norm layers to eval state.",
@@ -140,7 +135,6 @@ def main():
     training_cfg.DEVICE = args.device
     training_cfg.DISTRIBUTED.BACKEND = args.distributed_backend
     training_cfg.MIXED_PRECISION = args.use_mixed_precision
-    training_cfg.SCHEDULER.USE = args.use_scheduler
     training_cfg.FREEZE_BATCH_NORM = args.freeze_batch_norm
 
     if args.world_size is not None:
@@ -427,7 +421,10 @@ def main():
     if args.resume_ckpt is not None:
         state_dict = torch.load(args.resume_ckpt, map_location=torch.device('cpu'))
         if "model_state_dict" in state_dict:
+            print("SAVED STATES: ", state_dict.keys())
             model_state_dict = state_dict["model_state_dict"]
+            optimizer_state_dict = state_dict["optimizer_state_dict"]
+            scheduler_state_dict = state_dict["scheduler_state_dict"]
         else:
             model_state_dict = state_dict
         
@@ -453,7 +450,16 @@ def main():
             val_loader = val_loader_creator.get_dataloader()
         )
         
-        trainer.train(start_iteration=args.start_iteration)
+        if args.resume_ckpt is not None:
+            trainer.resume_training(
+                model_ckpt=model_state_dict,
+                optimizer_ckpt=optimizer_state_dict,
+                scheduler_ckpt=scheduler_state_dict,
+                start_iteration=args.start_iteration,
+                total_iterations=args.num_steps
+            )
+        else:
+            trainer.train(start_iteration=args.start_iteration)
 
 
 if __name__ == "__main__":

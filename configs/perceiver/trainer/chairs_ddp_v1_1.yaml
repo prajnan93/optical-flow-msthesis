@@ -80,7 +80,7 @@ SCHEDULER:
     anneal_strategy: linear
 CRITERION:
   CUSTOM: False
-  NAME: MSELoss
+  NAME: L1Loss
   PARAMS: null
 GRAD_CLIP: 
   USE: True
