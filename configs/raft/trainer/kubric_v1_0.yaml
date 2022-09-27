@@ -1,10 +1,10 @@
 DATA:
   TRAIN_DATASET:
-    NAME: "flyingchairs"
-    ROOT_DIR: "../../../Datasets/FlyingChairs_release/data"
+    NAME: "kubric"
+    ROOT_DIR: "../../../Datasets/kubric-public/tfds"
   VAL_DATASET:
-    NAME: "flyingchairs"
-    ROOT_DIR: "../../../Datasets/FlyingChairs_release/data" 
+    NAME: "kubric"
+    ROOT_DIR: "../../../Datasets/kubric-public/tfds" 
   BATCH_SIZE: 10
   NUM_WORKERS: 1
   PIN_MEMORY: True
@@ -18,11 +18,11 @@ DATA:
       TRAINING:
         SPATIAL_AUG_PARAMS: {
           "enabled": True,
-          "aug_prob": 0., 
-          "stretch_prob": 0, 
-          "min_scale": 0, 
-          "max_scale": 0, 
-          "max_stretch": 0,  
+          "aug_prob": 0.8, 
+          "stretch_prob": 0.8, 
+          "min_scale": -0.1, 
+          "max_scale": 1.0, 
+          "max_stretch": 0.2, 
           "flip": True, 
           "h_flip_prob": 0.5, 
           "v_flip_prob": 0.1
@@ -41,17 +41,17 @@ DATA:
           "bounds": [50, 100]
         }
         NOISE_PARAMS: {
-          "enabled": True,
-          "aug_prob": 1,
-          "noise_std_range": 0.06
+          "enabled": False,
+          "aug_prob": 0.5,
+          "noise_std_range": 0.06 
         }
         AUTOFLOW_SPATIAL_PARAMS: {
-          "enabled": True,
+          "enabled": False,
           "scale": [0.3, 0.03, 0.1],
           "rot": [0.4, 0.03],
           "trans": [0.4, 0.03],
           "squeeze": [0.3, 0.],
-          "black": True
+          "black": False
         }
         TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
         ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}

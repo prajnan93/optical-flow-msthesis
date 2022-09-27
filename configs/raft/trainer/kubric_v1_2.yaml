@@ -1,10 +1,10 @@
 DATA:
   TRAIN_DATASET:
-    NAME: "flyingchairs"
-    ROOT_DIR: "../../../Datasets/FlyingChairs_release/data"
+    NAME: "kubric"
+    ROOT_DIR: "../../../Datasets/kubric-public/tfds"
   VAL_DATASET:
-    NAME: "flyingchairs"
-    ROOT_DIR: "../../../Datasets/FlyingChairs_release/data" 
+    NAME: "kubric"
+    ROOT_DIR: "../../../Datasets/kubric-public/tfds"  
   BATCH_SIZE: 10
   NUM_WORKERS: 1
   PIN_MEMORY: True
