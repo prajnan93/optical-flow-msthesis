@@ -1,10 +1,10 @@
 import argparse
 import torch
-from ezflow.data import DataloaderCreator
+
 from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
 
-from nnflow import eval_model, Perceiver
+from nnflow import eval_model, Perceiver, CustomDataloaderCreator
 
 def main():
 
@@ -171,7 +171,7 @@ def main():
 
     if training_cfg.DISTRIBUTED.USE is True:
 
-        train_loader_creator = DataloaderCreator(
+        train_loader_creator = CustomDataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
@@ -180,7 +180,7 @@ def main():
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK
         )
 
-        val_loader_creator = DataloaderCreator(
+        val_loader_creator = CustomDataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
@@ -340,6 +340,25 @@ def main():
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
+    if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "kubric":
+        train_loader_creator.add_Kubric(
+            root_dir=training_cfg.DATA.TRAIN_DATASET.ROOT_DIR,
+            crop=True,
+            crop_type="random",
+            crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
+            augment=training_cfg.DATA.AUGMENTATION.USE,
+            aug_params={
+                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
+                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
+                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
+                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
+                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
+                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
+            },
+            norm_params=training_cfg.DATA.NORM_PARAMS
+        )
+
     # --------------------- VALIDATION DATASETS -----------------------------------#
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "flyingchairs":
         val_loader_creator.add_FlyingChairs(
@@ -416,6 +435,17 @@ def main():
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
+    if training_cfg.DATA.VAL_DATASET.NAME.lower() == "kubric":
+        val_loader_creator.add_Kubric(
+            root_dir=training_cfg.DATA.VAL_DATASET.ROOT_DIR,
+            split="validation",
+            crop=True,
+            crop_type="center",
+            crop_size=training_cfg.DATA.VAL_CROP_SIZE,
+            augment=False,
+            norm_params=training_cfg.DATA.NORM_PARAMS
+        )
+        
     model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
 
     if args.resume_ckpt is not None:
