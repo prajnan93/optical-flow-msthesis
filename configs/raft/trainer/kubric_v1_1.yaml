@@ -6,8 +6,9 @@ DATA:
     NAME: "kubric"
     ROOT_DIR: "../../../Datasets/kubric-public/tfds"  
   BATCH_SIZE: 10
-  NUM_WORKERS: 1
+  NUM_WORKERS: 0
   PIN_MEMORY: True
+  SHUFFLE: False
   APPEND_VALID_MASK: True
   TRAIN_CROP_SIZE: [368, 496]
   VAL_CROP_SIZE: [368, 496]
@@ -92,10 +93,11 @@ MIXED_PRECISION: False
 DEVICE: "0"
 DISTRIBUTED:
   USE: False
-  WORLD_SIZE: 2
+  WORLD_SIZE: 4
   BACKEND: nccl
   MASTER_ADDR: localhost
   MASTER_PORT: "12355"
+  SYNC_BATCH_NORM: True
 LOG_DIR: "./logs"
 LOG_ITERATIONS_INTERVAL: 100
 CKPT_DIR: "./ckpts"
