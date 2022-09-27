@@ -191,14 +191,14 @@ def main():
 
     else:
 
-        train_loader_creator = DataloaderCreator(
+        train_loader_creator = CustomDataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK
         )
 
-        val_loader_creator = DataloaderCreator(
+        val_loader_creator = CustomDataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,

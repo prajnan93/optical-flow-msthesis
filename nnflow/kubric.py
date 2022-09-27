@@ -206,18 +206,18 @@ class CustomDataloaderCreator(DataloaderCreator):
         world_size=None,
     ):
 
-    super(CustomDataloaderCreator, self).__init__(
-        batch_size=batch_size,
-        pin_memory=pin_memory,
-        shuffle=shuffle,
-        num_workers=num_workers,
-        drop_last=drop_last,
-        init_seed=init_seed,
-        append_valid_mask=append_valid_mask,
-        is_prediction=is_prediction,
-        distributed=distributed,
-        world_size=world_size,
-    )
+        super(CustomDataloaderCreator, self).__init__(
+            batch_size=batch_size,
+            pin_memory=pin_memory,
+            shuffle=shuffle,
+            num_workers=num_workers,
+            drop_last=drop_last,
+            init_seed=init_seed,
+            append_valid_mask=append_valid_mask,
+            is_prediction=is_prediction,
+            distributed=distributed,
+            world_size=world_size,
+        )
 
 
     def add_Kubric(self, root_dir, split="training", augment=False, **kwargs):

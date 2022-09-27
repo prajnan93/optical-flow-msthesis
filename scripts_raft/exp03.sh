@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=240:00:00
+#SBATCH --time=96:00:00
 #SBATCH --job-name=raft_exp03
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
