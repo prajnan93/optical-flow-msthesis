@@ -14,42 +14,43 @@ from ezflow.modules import BaseModule
 
 @MODEL_REGISTRY.register()
 class GMFlow(BaseModule):
-    def __init__(self,
-                 num_scales=1,
-                 upsample_factor=8,
-                 feature_channels=128,
-                 attention_type='swin',
-                 num_transformer_layers=6,
-                 ffn_dim_expansion=4,
-                 num_head=1,
-                 **kwargs,
-                 ):
+    def __init__(self, cfg):
+        
         super(GMFlow, self).__init__()
 
-        self.num_scales = num_scales
-        self.feature_channels = feature_channels
-        self.upsample_factor = upsample_factor
-        self.attention_type = attention_type
-        self.num_transformer_layers = num_transformer_layers
+        self.cfg = cfg
+
+        self.num_scales = cfg.MODEL.NUM_SCALES
+        self.feature_channels = cfg.MODEL.FEATURE_CHANNELS
+        self.upsample_factor = cfg.MODEL.UPSAMPLE_FACTOR
+        self.num_head = cfg.MODEL.NUM_HEADS
+        self.attention_type = cfg.MODEL.ATTENTION_TYPE
+        self.ffn_dim_expansion = cfg.MODEL.FFN_DIM_EXPANSION
+        self.num_transformer_layers = cfg.MODEL.NUM_TRANSFORMER_LAYERS
+
+        self.attn_splits_list=cfg.MODEL.ATTN_SPLITS_LIST
+        self.corr_radius_list=cfg.MODEL.CORR_RADIUS_LIST
+        self.prop_radius_list=cfg.MODEL.PROP_RADIUS_LIST
+        self.pred_bidir_flow=cfg.MODEL.PRED_BIDIR_FLOW
 
         # CNN backbone
-        self.backbone = CNNEncoder(output_dim=feature_channels, num_output_scales=num_scales)
+        self.backbone = CNNEncoder(output_dim=self.feature_channels, num_output_scales=self.num_scales)
 
         # Transformer
-        self.transformer = FeatureTransformer(num_layers=num_transformer_layers,
-                                              d_model=feature_channels,
-                                              nhead=num_head,
-                                              attention_type=attention_type,
-                                              ffn_dim_expansion=ffn_dim_expansion,
+        self.transformer = FeatureTransformer(num_layers=self.num_transformer_layers,
+                                              d_model=self.feature_channels,
+                                              nhead=self.num_head,
+                                              attention_type=self.attention_type,
+                                              ffn_dim_expansion=self.ffn_dim_expansion,
                                               )
 
         # flow propagation with self-attn
-        self.feature_flow_attn = FeatureFlowAttention(in_channels=feature_channels)
+        self.feature_flow_attn = FeatureFlowAttention(in_channels=self.feature_channels)
 
         # convex upsampling: concat feature0 and flow as input
-        self.upsampler = nn.Sequential(nn.Conv2d(2 + feature_channels, 256, 3, 1, 1),
+        self.upsampler = nn.Sequential(nn.Conv2d(2 + self.feature_channels, 256, 3, 1, 1),
                                        nn.ReLU(inplace=True),
-                                       nn.Conv2d(256, upsample_factor ** 2 * 9, 1, 1, 0))
+                                       nn.Conv2d(256, self.upsample_factor ** 2 * 9, 1, 1, 0))
 
     def extract_feature(self, img0, img1):
         concat = torch.cat((img0, img1), dim=0)  # [2B, C, H, W]
@@ -93,13 +94,7 @@ class GMFlow(BaseModule):
 
         return up_flow
 
-    def forward(self, img0, img1,
-                attn_splits_list=None,
-                corr_radius_list=None,
-                prop_radius_list=None,
-                pred_bidir_flow=False,
-                **kwargs,
-                ):
+    def forward(self, img0, img1):
 
         results_dict = {}
         flow_preds = []
@@ -111,12 +106,12 @@ class GMFlow(BaseModule):
 
         flow = None
 
-        assert len(attn_splits_list) == len(corr_radius_list) == len(prop_radius_list) == self.num_scales
+        assert len(self.attn_splits_list) == len(self.corr_radius_list) == len(self.prop_radius_list) == self.num_scales
 
         for scale_idx in range(self.num_scales):
             feature0, feature1 = feature0_list[scale_idx], feature1_list[scale_idx]
 
-            if pred_bidir_flow and scale_idx > 0:
+            if self.pred_bidir_flow and scale_idx > 0:
                 # predicting bidirectional flow with refinement
                 feature0, feature1 = torch.cat((feature0, feature1), dim=0), torch.cat((feature1, feature0), dim=0)
 
@@ -129,9 +124,9 @@ class GMFlow(BaseModule):
                 flow = flow.detach()
                 feature1 = flow_warp(feature1, flow)  # [B, C, H, W]
 
-            attn_splits = attn_splits_list[scale_idx]
-            corr_radius = corr_radius_list[scale_idx]
-            prop_radius = prop_radius_list[scale_idx]
+            attn_splits = self.attn_splits_list[scale_idx]
+            corr_radius = self.corr_radius_list[scale_idx]
+            prop_radius = self.prop_radius_list[scale_idx]
 
             # add position to features
             feature0, feature1 = feature_add_position(feature0, feature1, attn_splits, self.feature_channels)
@@ -141,7 +136,7 @@ class GMFlow(BaseModule):
 
             # correlation and softmax
             if corr_radius == -1:  # global matching
-                flow_pred = global_correlation_softmax(feature0, feature1, pred_bidir_flow)[0]
+                flow_pred = global_correlation_softmax(feature0, feature1, self.pred_bidir_flow)[0]
             else:  # local matching
                 flow_pred = local_correlation_softmax(feature0, feature1, corr_radius)[0]
 
@@ -154,7 +149,7 @@ class GMFlow(BaseModule):
                 flow_preds.append(flow_bilinear)
 
             # flow propagation with self-attn
-            if pred_bidir_flow and scale_idx == 0:
+            if self.pred_bidir_flow and scale_idx == 0:
                 feature0 = torch.cat((feature0, feature1), dim=0)  # [2*B, C, H, W] for propagation
             flow = self.feature_flow_attn(feature0, flow.detach(),
                                           local_window_attn=prop_radius > 0,
@@ -170,5 +165,8 @@ class GMFlow(BaseModule):
                 flow_preds.append(flow_up)
 
         results_dict.update({'flow_preds': flow_preds})
+
+        if not self.training:
+            results_dict["flow_upsampled"] = results_dict["flow_preds"][0]
 
         return results_dict

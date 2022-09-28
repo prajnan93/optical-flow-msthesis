@@ -4,7 +4,7 @@ import torch
 from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
 
-from nnflow import eval_model, CustomDataloaderCreator
+from nnflow import eval_model, CustomDataloaderCreator, GMFlow
 
 def main():
 
@@ -169,8 +169,6 @@ def main():
         if training_cfg.SCHEDULER.NAME == "OneCycleLR":
             training_cfg.SCHEDULER.PARAMS.epochs = args.epochs
 
-    shuffle = True if training_cfg.DATA.SHUFFLE is None else training_cfg.DATA.SHUFFLE
-
     if training_cfg.DISTRIBUTED.USE is True:
 
         train_loader_creator = CustomDataloaderCreator(
@@ -180,7 +178,7 @@ def main():
             distributed=True,
             world_size=training_cfg.DISTRIBUTED.WORLD_SIZE,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=shuffle
+            shuffle=training_cfg.DATA.SHUFFLE
         )
 
         val_loader_creator = CustomDataloaderCreator(
@@ -190,7 +188,7 @@ def main():
             distributed=True,
             world_size=training_cfg.DISTRIBUTED.WORLD_SIZE,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=shuffle
+            shuffle=training_cfg.DATA.SHUFFLE
         )
 
     else:
@@ -201,7 +199,7 @@ def main():
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=shuffle
+            shuffle=training_cfg.DATA.SHUFFLE
         )
 
         val_loader_creator = CustomDataloaderCreator(
@@ -209,7 +207,7 @@ def main():
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=shuffle
+            shuffle=training_cfg.DATA.SHUFFLE
         )
 
 

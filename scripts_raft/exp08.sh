@@ -4,7 +4,7 @@
 #SBATCH --job-name=raft_exp08
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a5000:1
+#SBATCH --gres=gpu:a6000:1
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/raft/outs/exp08.out
 
