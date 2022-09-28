@@ -76,6 +76,10 @@ class Kubric(data.Dataset):
         self.augmentor = None
 
         self.normalize = Normalize(**norm_params)
+
+        # Tensorflow prioritizes loading on GPU by default
+        # Disable loading on all GPUS
+        tf.config.set_visible_devices([], 'GPU')
         
         split = "train" if split == "training" else "validation"
         try:
@@ -139,7 +143,7 @@ class Kubric(data.Dataset):
         flow = flow.astype(np.float32)
         valid = None
         
-        # delete unused instances to free memory
+        # delete unused variables to free memory
         del video, flows, sample, max_index, random_index
         
         if self.is_prediction:
