@@ -9,6 +9,7 @@
 #SBATCH --output=../../results/gmflow/outs/exp01.out
 
 # GMFlow training with RAFT Augmentation, Training settings and GMFlow Normalization
+# Effective batch size = 16
 
 module load cuda/11.3
 cd ../
@@ -18,7 +19,7 @@ python train.py --model "GMFlow" \
                 --device "all" \
                 --log_dir "../results/gmflow/logs/exp01" \
                 --ckpt_dir "../results/gmflow/ckpts/exp01" \
-                --batch_size 16 \
+                --batch_size 4 \
                 --start_iteration 1 \
                 --num_steps 100100 \
                 --train_crop_size 368 496 \
