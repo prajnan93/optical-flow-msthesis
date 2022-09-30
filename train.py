@@ -454,12 +454,18 @@ def main():
     model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
 
     if args.resume_ckpt is not None:
+
+        optimizer_state_dict = None
+        scheduler_state_dict = None
+
         state_dict = torch.load(args.resume_ckpt, map_location=torch.device('cpu'))
         if "model_state_dict" in state_dict:
             print("SAVED STATES: ", state_dict.keys())
             model_state_dict = state_dict["model_state_dict"]
-            optimizer_state_dict = state_dict["optimizer_state_dict"]
-            scheduler_state_dict = state_dict["scheduler_state_dict"]
+            if args.resume:
+                print("Loading optimizer and scheduler checkpoints to resume training")
+                optimizer_state_dict = state_dict["optimizer_state_dict"]
+                scheduler_state_dict = state_dict["scheduler_state_dict"]
         else:
             model_state_dict = state_dict
         
@@ -474,8 +480,16 @@ def main():
             val_loader_creator = val_loader_creator
         )
 
-
-        trainer.train(start_iteration=args.start_iteration)
+        if args.resume_ckpt is not None:
+            trainer.resume_training(
+                model_ckpt=model_state_dict,
+                optimizer_ckpt=optimizer_state_dict,
+                scheduler_ckpt=scheduler_state_dict,
+                start_iteration=args.start_iteration,
+                total_iterations=args.num_steps
+            )
+        else:
+            trainer.train(start_iteration=args.start_iteration)
 
     else:
         trainer = Trainer(
