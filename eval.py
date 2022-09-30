@@ -8,7 +8,7 @@ from nnflow import *
 
 def main():
 
-    parser = argparse.ArgumentParser(description="Train a model")
+    parser = argparse.ArgumentParser(description="Evaluate a model")
     parser.add_argument(
         "--model", type=str, required=True, help="Name of the model to train"
     )
@@ -31,7 +31,7 @@ def main():
     )
     parser.add_argument(
         "--mean",
-        type=int,
+        type=float,
         nargs="+",
         default=None,
         required=True,
@@ -39,7 +39,7 @@ def main():
     )
     parser.add_argument(
         "--std",
-        type=int,
+        type=float,
         nargs="+",
         default=None,
         required=True,
