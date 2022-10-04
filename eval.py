@@ -25,8 +25,8 @@ def main():
         "--crop_size",
         type=int,
         nargs="+",
-        default=None,
-        required=True,
+        default=[368,496],
+        required=False,
         help="Crop size for validation images",
     )
     parser.add_argument(
@@ -68,22 +68,24 @@ def main():
             norm_params=norm_params
         )
 
-    if args.dataset.lower() == "flyingthings3d":
+    if args.dataset.lower() == "things_clean":
         val_loader.add_FlyingThings3D(
             root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
             dstype="frames_cleanpass",
             split="validation",
-            crop=True,
+            crop=False,
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
             norm_params=norm_params
         )
+
+    if args.dataset.lower() == "things_final":
         val_loader.add_FlyingThings3D(
             root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
             dstype="frames_finalpass",
             split="validation",
-            crop=True,
+            crop=False,
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
@@ -93,7 +95,7 @@ def main():
     if args.dataset.lower() == "sceneflow":
         val_loader.add_SceneFlow(
             root_dir="../../../Datasets/SceneFlow",
-            crop=True,
+            crop=False,
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
@@ -131,7 +133,6 @@ def main():
     )
 
     state_dict = torch.load(args.model_weights_path, map_location=torch.device('cpu'))
-    print(state_dict.keys())
     if "model_state_dict" in state_dict:
         model_state_dict = state_dict["model_state_dict"]
     elif "model" in state_dict:

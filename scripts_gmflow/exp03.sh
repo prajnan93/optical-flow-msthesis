@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=48:00:00
+#SBATCH --time=32:00:00
 #SBATCH --job-name=gmflow_exp03
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
@@ -21,7 +21,7 @@ python train.py --model "GMFlow" \
                 --ckpt_dir "../results/gmflow/ckpts/exp03" \
                 --batch_size 4 \
                 --start_iteration 1 \
-                --num_steps 100100 \
-                --train_crop_size 384 512 \
-                --val_crop_size 384 512 \
+                --num_steps 200100 \
+                --train_crop_size 368 496 \
+                --val_crop_size 368 496 \
                 --world_size 4

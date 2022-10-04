@@ -10,8 +10,8 @@ DATA:
   PIN_MEMORY: True
   APPEND_VALID_MASK: True
   SHUFFLE: True
-  TRAIN_CROP_SIZE: [384, 512]
-  VAL_CROP_SIZE: [384, 512]
+  TRAIN_CROP_SIZE: [368, 496]
+  VAL_CROP_SIZE: [368, 496]
   NORM_PARAMS: {"use":True, "mean":[0.485, 0.456, 0.406], "std":[0.229, 0.224, 0.225]}
   AUGMENTATION:
     USE: True
@@ -75,7 +75,7 @@ SCHEDULER:
   NAME: OneCycleLR
   PARAMS:
     max_lr: 0.0004
-    total_steps: 100100
+    total_steps: 200100
     pct_start: 0.05
     cycle_momentum: False
     anneal_strategy: cos
@@ -105,7 +105,7 @@ CKPT_INTERVAL: 10000
 VALIDATE_INTERVAL: 1000
 VALIDATE_ON: metric
 EPOCHS: null
-NUM_STEPS: 100100
+NUM_STEPS: 200100
 RESUME_TRAINING:
   CONSOLIDATED_CKPT: null
   EPOCHS: 100
