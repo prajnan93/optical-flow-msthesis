@@ -57,12 +57,11 @@ def main():
     norm_params = {"use":True, "mean":args.mean, "std":args.std}
 
     val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=1, pin_memory=True)
-    
     if args.dataset.lower() == "flyingchairs":
         val_loader.add_FlyingChairs(
             root_dir="../../../Datasets/FlyingChairs_release/data",
             split="validation",
-            crop=True,
+            crop=False,
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
@@ -125,7 +124,6 @@ def main():
             norm_params=norm_params
         )
 
-
     model = build_model(
         args.model, 
         cfg_path=args.model_cfg, 
@@ -133,14 +131,17 @@ def main():
     )
 
     state_dict = torch.load(args.model_weights_path, map_location=torch.device('cpu'))
+    print(state_dict.keys())
     if "model_state_dict" in state_dict:
         model_state_dict = state_dict["model_state_dict"]
+    elif "model" in state_dict:
+        model_state_dict = state_dict["model"]
     else:
         model_state_dict = state_dict
 
     model.load_state_dict(model_state_dict)
 
-    eval_model(model, val_loader.get_dataloader(), device='all', pad_divisor=args.pad_divisor)
+    eval_model(model, val_loader.get_dataloader(), device='0', pad_divisor=args.pad_divisor)
 
 
 if __name__ == "__main__":
