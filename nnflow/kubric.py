@@ -131,6 +131,9 @@ class Kubric(data.Dataset):
             
         video = sample['video'].numpy()
         flows = sample['forward_flow'].numpy()
+
+        minv, maxv = sample['metadata']['forward_flow_range'].numpy()
+        flows = flows / 65535 * (maxv - minv) + minv
         
         max_index = video.shape[0] - 2
         random_index = np.random.randint(0, max_index)
