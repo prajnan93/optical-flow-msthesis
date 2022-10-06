@@ -870,7 +870,7 @@ class SwinEncoderV2(nn.Module):
         # Init stages
         self.stages: nn.ModuleList = nn.ModuleList()
         for index, (depth, number_of_head) in enumerate(zip(depths, number_of_heads)):
-            print(f"in_channels: {embedding_channels * (2 ** max(index - 1, 0))}")
+            # print(f"in_channels: {embedding_channels * (2 ** max(index - 1, 0))}")
             self.stages.append(
                 SwinTransformerStage(
                     in_channels=embedding_channels * (2 ** max(index - 1, 0)),
@@ -944,10 +944,11 @@ class SwinEncoderV2(nn.Module):
         output: torch.Tensor = self.patch_embedding(input)
         # Init list to store feature
         features: List[torch.Tensor] = []
+
         # Forward pass of each stage
         for stage in self.stages:
             output: torch.Tensor = stage(output)
-            print(output.shape)
+            # print(output.shape)
 
         # output = rearrange(output, "n c h w -> n (h w) c")
 

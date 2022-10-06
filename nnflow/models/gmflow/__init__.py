@@ -1,4 +1,5 @@
 from .gmflow import GMFlow, GMFlow_OG
+from .gmflow_v2 import GMFlowV2
 from .backbone import CNNEncoder
 from .transformer import FeatureTransformer, FeatureFlowAttention
 from .matching import global_correlation_softmax, local_correlation_softmax

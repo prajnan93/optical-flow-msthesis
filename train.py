@@ -4,7 +4,7 @@ import torch
 from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
 
-from nnflow import eval_model, CustomDataloaderCreator, GMFlow
+from nnflow import eval_model, CustomDataloaderCreator, GMFlow, GMFlowV2
 
 def main():
 

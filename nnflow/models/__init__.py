@@ -1,1 +1,1 @@
-from .gmflow import GMFlow, GMFlow_OG
+from .gmflow import GMFlow, GMFlow_OG, GMFlowV2
