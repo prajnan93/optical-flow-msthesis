@@ -5,12 +5,13 @@ DATA:
   VAL_DATASET:
     NAME: "flyingchairs"
     ROOT_DIR: "../../../Datasets/FlyingChairs_release/data" 
-  BATCH_SIZE: 10
-  NUM_WORKERS: 1
+  BATCH_SIZE: 8
+  NUM_WORKERS: 4
   PIN_MEMORY: True
   APPEND_VALID_MASK: False
   TRAIN_CROP_SIZE: [384, 448]
   VAL_CROP_SIZE: [384, 448]
+  SHUFFLE: True
   NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
   AUGMENTATION:
     USE: True
@@ -74,7 +75,7 @@ SCHEDULER:
   NAME: OneCycleLR
   PARAMS:
     max_lr: 0.0004
-    total_steps: 100100
+    total_steps: 1200100
     pct_start: 0.05
     cycle_momentum: False
     anneal_strategy: linear
@@ -101,11 +102,11 @@ DISTRIBUTED:
 LOG_DIR: "./logs"
 LOG_ITERATIONS_INTERVAL: 100
 CKPT_DIR: "./ckpts"
-CKPT_INTERVAL: 1000
+CKPT_INTERVAL: 100000
 VALIDATE_INTERVAL: 1000
 VALIDATE_ON: metric
 EPOCHS: null
-NUM_STEPS: 100100
+NUM_STEPS: 1200100
 RESUME_TRAINING:
   CONSOLIDATED_CKPT: null
   EPOCHS: 100

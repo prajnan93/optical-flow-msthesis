@@ -9,6 +9,7 @@ DATA:
   NUM_WORKERS: 1
   PIN_MEMORY: True
   APPEND_VALID_MASK: False
+  SHUFFLE: True
   TRAIN_CROP_SIZE: [384, 448]
   VAL_CROP_SIZE: [384, 448]
   NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
