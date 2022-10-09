@@ -75,7 +75,7 @@ SCHEDULER:
   NAME: OneCycleLR
   PARAMS:
     max_lr: 0.0004
-    total_steps: 200100
+    total_steps: 400100
     pct_start: 0.05
     cycle_momentum: False
     anneal_strategy: linear
@@ -101,11 +101,11 @@ DISTRIBUTED:
 LOG_DIR: "./logs"
 LOG_ITERATIONS_INTERVAL: 100
 CKPT_DIR: "./ckpts"
-CKPT_INTERVAL: 10000
+CKPT_INTERVAL: 100000
 VALIDATE_INTERVAL: 1000
 VALIDATE_ON: metric
 EPOCHS: null
-NUM_STEPS: 200100
+NUM_STEPS: 400100
 RESUME_TRAINING:
   CONSOLIDATED_CKPT: null
   EPOCHS: 100
