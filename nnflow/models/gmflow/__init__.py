@@ -7,3 +7,4 @@ from .geometry import flow_warp
 from .utils import normalize_img, feature_add_position
 from .swin_v2 import SwinEncoderV2
 from .swin_v3 import HuggingFaceSwinEncoderV2
+from .dino_vit import DinoVITS8

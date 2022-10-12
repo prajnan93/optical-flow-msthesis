@@ -4,7 +4,7 @@
 #SBATCH --job-name=flownet_c_exp01
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a6000:1
+#SBATCH --gres=gpu:a5000:1
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/flownet_c/outs/exp01.out
 
