@@ -5,6 +5,7 @@ import torch.nn.functional as F
 from ezflow.encoder import ENCODER_REGISTRY
 from ezflow.config import configurable
 
+_DINO_VIT = torch.hub.load('facebookresearch/dino:main', 'dino_vits8')
 
 @ENCODER_REGISTRY.register()
 class DinoVITS8(nn.Module):
@@ -23,7 +24,7 @@ class DinoVITS8(nn.Module):
         super(DinoVITS8, self).__init__()
         
         self.freeze = freeze
-        self.feature_extractor = torch.hub.load('facebookresearch/dino:main', 'dino_vits8')
+        self.feature_extractor = _DINO_VIT
         
         if pretrained_ckpt_path is not None:
             self.feature_extractor.load_state_dict(

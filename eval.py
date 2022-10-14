@@ -104,7 +104,7 @@ def main():
 
     if args.dataset.lower() == "sintel_clean":
         val_loader.add_MPISintel(
-            root_dir="../../../Datasets/MpiSintel/",
+            root_dir="../../../Datasets/MPI_Sintel/",
             split="training",
             dstype="clean",
             crop=False,
@@ -116,7 +116,7 @@ def main():
 
     if args.dataset.lower() == "sintel_final":
         val_loader.add_MPISintel(
-            root_dir="../../../Datasets/MpiSintel/",
+            root_dir="../../../Datasets/MPI_Sintel/",
             split="training",
             dstype="final",
             crop=False,
