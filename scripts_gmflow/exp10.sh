@@ -9,7 +9,7 @@
 #SBATCH --output=../../results/gmflow/outs/exp10.out
 
 # GMFlow training with RAFT Augmentation, GMFflow Training settings(difference lies in loss fn gamma and scheduler anneal strategy) and GMFlow Normalization
-# Pretrained Dino ViT Encoder
+# Pretrained Dino ViT Encoder finetuning
 # Effective batch size = 16
 
 module load cuda/11.3
