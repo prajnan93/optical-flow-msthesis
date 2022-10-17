@@ -13,7 +13,7 @@
 
 module load cuda/11.3
 cd ../
-python train.py --model "raft" \
+python train.py --model "RAFT" \
                 --model_cfg "./configs/raft/models/raft.yaml" \
                 --train_cfg "./configs/raft/trainer/chairs_v1_0.yaml" \
                 --device "all" \
