@@ -4,7 +4,7 @@
 #SBATCH --job-name=raft_exp01_ddp
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a6000:2
+#SBATCH --gres=gpu:a5000:2
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/raft/outs/exp01_ddp.out
 
@@ -15,7 +15,7 @@ module load cuda/11.3
 cd ../
 python train.py --model "RAFT" \
                 --model_cfg "./configs/raft/models/raft.yaml" \
-                --train_cfg "./configs/raft/trainer/chairs_v1_0.yaml" \
+                --train_cfg "./configs/raft/trainer/chairs_v1_0_ddp.yaml" \
                 --device "all" \
                 --log_dir "../results/raft/logs/exp01_ddp" \
                 --ckpt_dir "../results/raft/ckpts/exp01_ddp" \

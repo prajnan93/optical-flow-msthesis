@@ -3,7 +3,39 @@ import time
 import torch
 from torch.nn import DataParallel
 
-from ezflow.utils import AverageMeter, InputPadder, endpointerror
+import numpy as np
+
+from ezflow.utils import AverageMeter, InputPadder
+
+
+def endpointerror(pred, target):
+    """
+    Endpoint error
+    Parameters
+    ----------
+    pred : torch.Tensor
+        Predicted flow
+    target : torch.Tensor
+        Target flow
+    Returns
+    -------
+    torch.Tensor
+        Endpoint error
+    """
+    if isinstance(pred, tuple) or isinstance(pred, list):
+        pred = pred[-1]
+
+    if target.shape[1] == 3:
+        """Ignore valid mask for EPE calculation."""
+        target = target[:, :2, :, :]
+
+    epe = torch.norm(pred - target, p=2, dim=1)
+
+    metrics = {
+        "epe": epe.mean().item()
+    }
+
+    return metrics
 
 
 def warmup(model, dataloader, device, pad_divisor=1):
@@ -74,6 +106,8 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
 
     padder = InputPadder(inp[0].shape, divisor=pad_divisor)
 
+    f1_list = []
+
     with torch.no_grad():
 
         for inp, target in dataloader:
@@ -106,28 +140,45 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
             flow = pred * flow_scale
 
             metric = metric_fn(flow, target)
-            metric_meter.update(metric)
+            metric_meter.update(metric["epe"], n=batch_size)
+
+            if "f1" in metric:
+                f1_list.append(metric["f1"])
 
     avg_inference_time = sum(times) / len(times)
     avg_inference_time /= batch_size  # Average inference time per sample
 
-    print("=" * 100)
-    if avg_inference_time != 0:
-        print(
-            f"Average inference time: {avg_inference_time}, FPS: {1/avg_inference_time}"
-        )
+    fps = None
+    f1_all = None
 
-    return metric_meter, avg_inference_time
+    if avg_inference_time != 0:
+        fps =  1/avg_inference_time
+
+        # print(
+        #     f"Average inference time: {avg_inference_time}, FPS: {1/avg_inference_time}"
+        # )
+
+    if len(f1_list) != 0:
+        f1_list = np.concatenate(f1_list)
+        f1_all = 100 * np.mean(f1_list)
+
+    metrics = {
+        "avg_epe":metric_meter.avg,
+        "avg_inference_time":avg_inference_time,
+        "FPS": fps,
+        "f1_all": f1_all
+    }
+    return metrics
 
 
 def eval_model(
     model,
     dataloader,
     device,
-    metric=None,
+    metric=endpointerror,
     profiler=None,
     flow_scale=1.0,
-    pad_divisor=1,
+    pad_divisor=1
 ):
     """
     Evaluates a model on a dataloader and optionally profiles model characteristics such as memory usage, inference time, and evaluation metric
@@ -186,14 +237,14 @@ def eval_model(
     model = model.to(device)
     model.eval()
 
-    metric_fn = metric or endpointerror
+    metric_fn = metric
 
     warmup(model, dataloader, device, pad_divisor=pad_divisor)
     if torch.cuda.is_available():
         torch.cuda.synchronize()
 
     if profiler is None:
-        metric_meter, _ = run_inference(
+        metrics = run_inference(
             model,
             dataloader,
             device,
@@ -212,6 +263,15 @@ def eval_model(
             pad_divisor=pad_divisor,
         )
 
-    print(f"Average evaluation metric = {metric_meter.avg}")
+    avg_epe = metrics["avg_epe"]
+    f1_all = metrics["f1_all"]
+    avg_inference_time = metrics["avg_inference_time"]
+    FPS = metrics["FPS"]
 
-    return metric_meter.avg
+    print(f"Average EPE = {avg_epe}")
+    print(f"F1 all = {f1_all}")
+    print(f"Average Inference time = {avg_inference_time}")
+    print(f"Average FPS = {FPS}")
+    print("-"*100,"\n")
+
+    del dataloader
