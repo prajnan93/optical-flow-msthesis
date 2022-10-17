@@ -158,7 +158,7 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
         #     f"Average inference time: {avg_inference_time}, FPS: {1/avg_inference_time}"
         # )
 
-    if len(f1_list) != 0:
+    if len(f1_list) > 0:
         f1_list = np.concatenate(f1_list)
         f1_all = 100 * np.mean(f1_list)
 

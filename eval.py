@@ -6,7 +6,10 @@ import numpy as np
 from ezflow.data import DataloaderCreator
 from ezflow.models import build_model
 from nnflow import *
+from nnflow.inference import endpointerror
 
+import warnings
+warnings.filterwarnings("ignore")
 
 def epe_f1_metric(pred, target):
     """
@@ -224,17 +227,20 @@ def main():
 
     model.load_state_dict(model_state_dict)
 
+    metric = endpointerror
+
     for name in loaders:
         print(f"Evaluating {name}:")
         loader = loaders[name].get_dataloader()
 
         if name == "kitti":
             args.pad_divisor = 64
+            metric = epe_f1_metric
 
         eval_model(
             model, 
             loader, 
-            metric=epe_f1_metric, 
+            metric=metric, 
             device='0', 
             pad_divisor=args.pad_divisor, 
             flow_scale=args.flow_scale
