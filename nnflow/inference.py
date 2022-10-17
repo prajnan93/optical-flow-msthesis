@@ -123,15 +123,13 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
             img1, img2 = padder.pad(img1, img2)
             # print(img1.shape)
 
-            if torch.cuda.is_available():
-                torch.cuda.synchronize()
+            torch.cuda.synchronize()
 
             start_time = time.time()
 
             output = model(img1, img2)
 
-            if torch.cuda.is_available():
-                torch.cuda.synchronize()
+            torch.cuda.synchronize()
 
             end_time = time.time()
             times.append(end_time - start_time)
