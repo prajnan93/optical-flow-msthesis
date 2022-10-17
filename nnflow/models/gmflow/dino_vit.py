@@ -5,7 +5,8 @@ import torch.nn.functional as F
 from ezflow.encoder import ENCODER_REGISTRY
 from ezflow.config import configurable
 
-_DINO_VIT = torch.hub.load('facebookresearch/dino:main', 'dino_vits8')
+_DINO_VIT = None
+# _DINO_VIT = torch.hub.load('facebookresearch/dino:main', 'dino_vits8')
 
 @ENCODER_REGISTRY.register()
 class DinoVITS8(nn.Module):

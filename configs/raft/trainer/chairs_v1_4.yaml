@@ -9,6 +9,7 @@ DATA:
   NUM_WORKERS: 1
   PIN_MEMORY: True
   APPEND_VALID_MASK: True
+  SHUFFLE: True
   TRAIN_CROP_SIZE: [368, 496]
   VAL_CROP_SIZE: [368, 496]
   NORM_PARAMS: {"use":True, "mean":[127.5, 127.5, 127.5], "std":[127.5, 127.5, 127.5]}
@@ -83,7 +84,7 @@ CRITERION:
   NAME: SequenceLoss
   PARAMS: 
     gamma: 0.8
-    max_flow: 1000.0
+    max_flow: 400.0
 GRAD_CLIP: 
   USE: True
   VALUE: 1.0
@@ -99,7 +100,7 @@ DISTRIBUTED:
 LOG_DIR: "./logs"
 LOG_ITERATIONS_INTERVAL: 100
 CKPT_DIR: "./ckpts"
-CKPT_INTERVAL: 10000
+CKPT_INTERVAL: 20000
 VALIDATE_INTERVAL: 1000
 VALIDATE_ON: metric
 EPOCHS: null
