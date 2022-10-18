@@ -349,6 +349,7 @@ def main():
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "kubric":
         train_loader_creator.add_Kubric(
             root_dir=training_cfg.DATA.TRAIN_DATASET.ROOT_DIR,
+            split="training",
             crop=True,
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,

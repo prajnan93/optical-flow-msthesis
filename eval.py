@@ -41,7 +41,7 @@ def epe_f1_metric(pred, target):
 
         epe = epe.view(-1)
         mag = mag.view(-1)
-        val = valid_mask.view(-1) >= 0.5
+        val = valid_mask.reshape(-1) >= 0.5
 
         f1 = ((epe > 3.0) & ((epe/mag) > 0.05)).float()
         
@@ -198,18 +198,18 @@ def main():
         )
         loaders["things_final"]=val_loader
 
-    if args.dataset.lower() == "sceneflow":
-        val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=4, pin_memory=True)
-        val_loader.add_SceneFlow(
-            root_dir="../../../Datasets/SceneFlow",
+    if args.dataset.lower() == "kubric":
+        val_loader = CustomDataloaderCreator(batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
+        val_loader.add_Kubric(
+            root_dir="../KubricFlow",
+            split="validation",
             crop=False,
             crop_type="center",
             crop_size=args.crop_size,
             augment=False,
             norm_params=norm_params
         )
-        loaders["sceneflow"] = val_loader
-
+        loaders["kubric"] = val_loader
 
     model = build_model(
         args.model, 
