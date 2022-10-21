@@ -182,15 +182,15 @@ def main():
             shuffle=training_cfg.DATA.SHUFFLE
         )
 
-        # val_loader_creator = CustomDataloaderCreator(
-        #     batch_size=training_cfg.DATA.BATCH_SIZE,
-        #     num_workers=training_cfg.DATA.NUM_WORKERS,
-        #     pin_memory=training_cfg.DATA.PIN_MEMORY,
-        #     distributed=True,
-        #     world_size=training_cfg.DISTRIBUTED.WORLD_SIZE,
-        #     append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-        #     shuffle=training_cfg.DATA.SHUFFLE
-        # )
+        val_loader_creator = CustomDataloaderCreator(
+            batch_size=training_cfg.DATA.BATCH_SIZE,
+            num_workers=training_cfg.DATA.NUM_WORKERS,
+            pin_memory=training_cfg.DATA.PIN_MEMORY,
+            distributed=True,
+            world_size=training_cfg.DISTRIBUTED.WORLD_SIZE,
+            append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
+            shuffle=training_cfg.DATA.SHUFFLE
+        )
 
     else:
         train_loader_creator = CustomDataloaderCreator(
@@ -201,13 +201,13 @@ def main():
             shuffle=training_cfg.DATA.SHUFFLE
         )
 
-    val_loader_creator = CustomDataloaderCreator(
-        batch_size=training_cfg.DATA.BATCH_SIZE,
-        num_workers=training_cfg.DATA.NUM_WORKERS,
-        pin_memory=training_cfg.DATA.PIN_MEMORY,
-        append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-        shuffle=training_cfg.DATA.SHUFFLE
-    )
+        val_loader_creator = CustomDataloaderCreator(
+            batch_size=training_cfg.DATA.BATCH_SIZE,
+            num_workers=training_cfg.DATA.NUM_WORKERS,
+            pin_memory=training_cfg.DATA.PIN_MEMORY,
+            append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
+            shuffle=training_cfg.DATA.SHUFFLE
+        )
 
 
     # --------------------- TRAINING DATASETS -----------------------------------#

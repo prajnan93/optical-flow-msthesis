@@ -18,7 +18,6 @@ python train.py --model "RAFT" \
                 --device "0" \
                 --log_dir "../results/raft/logs/exp06" \
                 --ckpt_dir "../results/raft/ckpts/exp06" \
-                --lr 0.000125 \
                 --batch_size 10 \
                 --start_iteration 1 \
                 --num_steps 100100 \
