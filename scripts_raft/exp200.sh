@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#SBATCH --time=96:00:00
-#SBATCH --job-name=raft_exp06
-#SBATCH --partition=jiang
+#SBATCH --time=08:00:00
+#SBATCH --job-name=raft_exp200
+#SBATCH --partition=gpu
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a5000:1
+#SBATCH --gres=gpu:v100-sxm2:1
 #SBATCH --cpus-per-task=8
-#SBATCH --output=../../results/raft/outs/exp06.out
+#SBATCH --output=../../results/raft/outs/exp200.out
 
 # RAFT training with RAFT Augmentation, Training settings and Normalization and Kubric dataset
 
@@ -16,8 +16,9 @@ python train.py --model "RAFT" \
                 --model_cfg "./configs/raft/models/raft.yaml" \
                 --train_cfg "./configs/raft/trainer/kubric_v1_0.yaml" \
                 --device "0" \
-                --log_dir "../results/raft/logs/exp06" \
-                --ckpt_dir "../results/raft/ckpts/exp06" \
+                --log_dir "../results/raft/logs/exp200" \
+                --ckpt_dir "../results/raft/ckpts/exp200" \
+                --ckpt_interval 10000 \
                 --batch_size 10 \
                 --start_iteration 1 \
                 --num_steps 100100 \

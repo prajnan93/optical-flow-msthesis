@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #SBATCH --time=240:00:00
-#SBATCH --job-name=flownet_c_exp01
+#SBATCH --job-name=flownet_c_exp001
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
 #SBATCH --gres=gpu:a5000:1
 #SBATCH --cpus-per-task=8
-#SBATCH --output=../../results/flownet_c/outs/exp01.out
+#SBATCH --output=../../results/flownet_c/outs/exp001.out
 
 # FlowNetC training with RAFT Augmentation, Training settings and FlownetC Normalization
 # FLOW_SCALE_FACTOR=20
@@ -17,8 +17,8 @@ python train.py --model "FlowNetC" \
                 --model_cfg "./configs/flownet_c/models/flownet_c.yaml" \
                 --train_cfg "./configs/flownet_c/trainer/chairs_v1_0.yaml" \
                 --device "0" \
-                --log_dir "../results/flownet_c/logs/exp01" \
-                --ckpt_dir "../results/flownet_c/ckpts/exp01" \
+                --log_dir "../results/flownet_c/logs/exp001" \
+                --ckpt_dir "../results/flownet_c/ckpts/exp001" \
                 --batch_size 8 \
                 --start_iteration 1 \
                 --num_steps 1200100 \

@@ -32,6 +32,12 @@ def main():
         help="Directory where ckpts are to be saved",
     )
     parser.add_argument(
+        "--ckpt_interval",
+        type=int,
+        default=None,
+        help="Number of intervals to save checkpoint",
+    )
+    parser.add_argument(
         "--epochs",
         type=int,
         default=None,
@@ -169,6 +175,9 @@ def main():
 
         if training_cfg.SCHEDULER.NAME == "OneCycleLR":
             training_cfg.SCHEDULER.PARAMS.epochs = args.epochs
+
+    if args.ckpt_interval is not None:
+        training_cfg.CKPT_INTERVAL = args.ckpt_interval
 
     if training_cfg.DISTRIBUTED.USE is True:
 
@@ -467,10 +476,10 @@ def main():
         
         model.load_state_dict(model_state_dict)
     
-    if args.resume:
-        print("Loading optimizer and scheduler checkpoints to resume training")
-        optimizer_state_dict = state_dict["optimizer_state_dict"]
-        scheduler_state_dict = state_dict["scheduler_state_dict"] 
+    # if args.resume:
+    #     print("Loading optimizer and scheduler checkpoints to resume training")
+    #     optimizer_state_dict = state_dict["optimizer_state_dict"]
+    #     scheduler_state_dict = state_dict["scheduler_state_dict"] 
 
                 
 
@@ -491,8 +500,7 @@ def main():
         
     if args.resume:
         trainer.resume_training(
-            optimizer_state_dict=optimizer_state_dict,
-            scheduler_state_dict=scheduler_state_dict,
+            consolidated_ckpt=args.resume_ckpt,
             start_iteration=args.start_iteration,
             total_iterations=args.num_steps
         )
