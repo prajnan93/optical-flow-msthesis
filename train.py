@@ -165,7 +165,11 @@ def main():
 
         if training_cfg.SCHEDULER.NAME == "OneCycleLR":
             training_cfg.SCHEDULER.PARAMS.max_lr = args.lr
-            training_cfg.SCHEDULER.PARAMS.total_steps = args.num_steps
+
+            if not resume:
+                training_cfg.SCHEDULER.PARAMS.total_steps = args.num_steps
+            else:
+                training_cfg.SCHEDULER.PARAMS.total_steps = args.num_steps
 
     if args.num_steps is not None:
         training_cfg.NUM_STEPS = args.num_steps

@@ -69,6 +69,8 @@ def warmup(model, dataloader, device, pad_divisor=1):
 
     _ = model(img1, img2)
 
+    del img1, img2, target, _
+
 
 def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divisor=1):
     """
@@ -134,14 +136,16 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
             end_time = time.time()
             times.append(end_time - start_time)
 
-            pred = padder.unpad(output["flow_upsampled"])
-            flow = pred * flow_scale
+            output["flow_upsampled"] = padder.unpad(output["flow_upsampled"])
+            output["flow_upsampled"] = output["flow_upsampled"] * flow_scale
 
-            metric = metric_fn(flow, target)
+            metric = metric_fn(output["flow_upsampled"], target)
             metric_meter.update(metric["epe"], n=batch_size)
 
             if "f1" in metric:
                 f1_list.append(metric["f1"])
+
+            del output
 
     avg_inference_time = sum(times) / len(times)
     avg_inference_time /= batch_size  # Average inference time per sample
