@@ -21,7 +21,7 @@ python train.py --model "RAFT" \
                 --resume_ckpt "../results/raft/ckpts/exp001/raft_step100000.pth" \
                 --batch_size 6 \
                 --start_iteration 1 \
-                --num_steps 0.000125 \
+                --num_steps 100100 \
                 --train_crop_size 400 720 \
                 --val_crop_size 368 496 \
                 --freeze_batch_norm

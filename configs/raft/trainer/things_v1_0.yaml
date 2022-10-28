@@ -12,6 +12,7 @@ DATA:
   SHUFFLE: True
   TRAIN_CROP_SIZE: [400, 720]
   VAL_CROP_SIZE: [368, 496]
+  NORM_PARAMS: {"use":True, "mean":[127.5, 127.5, 127.5], "std":[127.5, 127.5, 127.5]}
   AUGMENTATION:
     USE: True
     PARAMS:
@@ -53,6 +54,8 @@ DATA:
           "squeeze": [0.3, 0.],
           "black": False
         }
+        TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
       VALIDATION:
         SPATIAL_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
         COLOR_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
