@@ -107,6 +107,12 @@ def main():
     parser.add_argument(
         "--pad_divisor", type=int, default=1, help="Padding divisor for dataset"
     )
+    parser.add_argument(
+        "--raft_iters",
+        type=int,
+        default=None,
+        help="Number of RAFT iters",
+    )
 
     args = parser.parse_args()
 
@@ -114,7 +120,9 @@ def main():
 
     loaders = {}
 
-    if args.dataset.lower() == "chairs sintel kitti":
+    ds_list = args.dataset.lower().split()
+
+    if 'chairs' in ds_list:
         chair_loader = DataloaderCreator(batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
         chair_loader.add_FlyingChairs(
                 root_dir="../../../Datasets/FlyingChairs_release/data",
@@ -126,6 +134,9 @@ def main():
                 norm_params=norm_params
             )
 
+        loaders['chairs'] = chair_loader
+
+    if 'sintel' in ds_list:
         sintel_clean_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
         sintel_clean_loader.add_MPISintel(
                 root_dir="../../../Datasets/MPI_Sintel/",
@@ -151,6 +162,11 @@ def main():
                 norm_params=norm_params
             )
 
+        loaders['sintel_clean'] = sintel_clean_loader
+        loaders['sintel_final'] = sintel_final_loader
+
+
+    if 'kitti' in ds_list:
         kitti_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, append_valid_mask=True, num_workers=4, pin_memory=True)
         kitti_loader.add_Kitti(
                 root_dir="../../../Datasets/KITTI2015/",
@@ -161,16 +177,10 @@ def main():
                 augment=False,
                 norm_params=norm_params
             )
-
-        loaders = {
-            "chairs":chair_loader,
-            "sintel_clean": sintel_clean_loader,
-            "sintel_final": sintel_final_loader,
-            "kitti": kitti_loader
-        }
+        loaders['kitti'] = kitti_loader
 
 
-    if args.dataset.lower() == "things_clean":
+    if 'things_clean' in ds_list:
         val_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
         val_loader.add_FlyingThings3D(
             root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
@@ -184,7 +194,7 @@ def main():
         )
         loaders["things_clean"] = val_loader
 
-    if args.dataset.lower() == "things_final":
+    if 'things_final' in ds_list:
         val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=4, pin_memory=True)
         val_loader.add_FlyingThings3D(
             root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
@@ -198,7 +208,7 @@ def main():
         )
         loaders["things_final"]=val_loader
 
-    if args.dataset.lower() == "kubric":
+    if 'kubric' in ds_list:
         val_loader = CustomDataloaderCreator(batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
         val_loader.add_Kubric(
             root_dir="../KubricFlow",
@@ -210,6 +220,7 @@ def main():
             norm_params=norm_params
         )
         loaders["kubric"] = val_loader
+
 
     model = build_model(
         args.model, 
@@ -226,6 +237,10 @@ def main():
         model_state_dict = state_dict
 
     model.load_state_dict(model_state_dict)
+
+    if args.raft_iters is not None:
+        model.cfg.UPDATE_ITERS = args.raft_iters
+        print("RAFT UPDATE ITERS: ", model.cfg.UPDATE_ITERS)
 
     metric = endpointerror
 
