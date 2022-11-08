@@ -5,13 +5,13 @@ DATA:
   VAL_DATASET:
     NAME: "mpisintel"
     ROOT_DIR: "../../../Datasets/MPI_Sintel/"
-  BATCH_SIZE: 8
+  BATCH_SIZE: 2
   NUM_WORKERS: 4
   PIN_MEMORY: True
   APPEND_VALID_MASK: False
-  SHUFFLE: True
   TRAIN_CROP_SIZE: [384, 448]
   VAL_CROP_SIZE: [384, 448]
+  SHUFFLE: True
   NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
   AUGMENTATION:
     USE: True
@@ -43,8 +43,8 @@ DATA:
         }
         NOISE_PARAMS: {
           "enabled": False,
-          "aug_prob": 1,
-          "noise_std_range": 0.06
+          "aug_prob": 0.5,
+          "noise_std_range": 0.06 
         }
         AUTOFLOW_SPATIAL_PARAMS: {
           "enabled": False,
@@ -52,7 +52,7 @@ DATA:
           "rot": [0.4, 0.03],
           "trans": [0.4, 0.03],
           "squeeze": [0.3, 0.],
-          "black": True
+          "black": False
         }
         TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
         ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
@@ -92,13 +92,14 @@ GRAD_CLIP:
   VALUE: 1.0
 TARGET_SCALE_FACTOR: 20.0
 MIXED_PRECISION: False
-DEVICE: "0"
+DEVICE: "all"
 DISTRIBUTED:
-  USE: False
-  WORLD_SIZE: 2
+  USE: True
+  WORLD_SIZE: 4
   BACKEND: nccl
   MASTER_ADDR: localhost
   MASTER_PORT: "12355"
+  SYNC_BATCH_NORM: True
 LOG_DIR: "./logs"
 LOG_ITERATIONS_INTERVAL: 100
 CKPT_DIR: "./ckpts"
