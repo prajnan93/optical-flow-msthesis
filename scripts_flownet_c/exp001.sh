@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=120:00:00
+#SBATCH --time=240:00:00
 #SBATCH --job-name=flownet_c_exp001_ddp
 #SBATCH --partition=jiang
 #SBATCH --mem=96G
