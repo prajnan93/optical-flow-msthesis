@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --time=240:00:00
+#SBATCH --time=330:00:00
 #SBATCH --job-name=flownet_c_exp002_ddp
 #SBATCH --partition=jiang
-#SBATCH --mem=96G
+#SBATCH --mem=24G
 #SBATCH --gres=gpu:a6000:4
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/flownet_c/outs/exp002.out

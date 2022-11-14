@@ -134,7 +134,15 @@ def main():
                 norm_params=norm_params
             )
 
-        loaders['chairs'] = chair_loader
+        loaders['chairs'] = {
+            'loader': chair_loader,
+            'pad_div': {
+                'RAFT':1,
+                'PWCNet':1,
+                'FlowNetC':1,
+                'GMFlowV2':1
+            }
+        }
 
     if 'sintel' in ds_list:
         sintel_clean_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
@@ -162,10 +170,26 @@ def main():
                 norm_params=norm_params
             )
 
-        loaders['sintel_clean'] = sintel_clean_loader
-        loaders['sintel_final'] = sintel_final_loader
-
-
+        loaders['sintel_clean'] = {
+            'loader': sintel_clean_loader,
+            'pad_div': {
+                'RAFT':8,
+                'PWCNet':16,
+                'FlowNetC':16,
+                'GMFlowV2':8
+            }
+        }
+        
+        loaders['sintel_final'] = {
+            'loader': sintel_final_loader,
+            'pad_div': {
+                'RAFT':8,
+                'PWCNet':16,
+                'FlowNetC':16,
+                'GMFlowV2':8
+            }
+        }
+        
     if 'kitti' in ds_list:
         kitti_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, append_valid_mask=True, num_workers=4, pin_memory=True)
         kitti_loader.add_Kitti(
@@ -173,53 +197,62 @@ def main():
                 split="training",
                 crop=True,
                 crop_type="center",
-                crop_size=[370, 1224],
+                crop_size=[368, 1216], # 368, 1216, #370, 1224
                 augment=False,
                 norm_params=norm_params
             )
-        loaders['kitti'] = kitti_loader
+        loaders['kitti'] = {
+            'loader': kitti_loader,
+            'pad_div': {
+                'RAFT':8,
+                'PWCNet':32,
+                'FlowNetC':32,
+                'GMFlowV2':8
+            }
+        }
+        
 
 
-    if 'things_clean' in ds_list:
-        val_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
-        val_loader.add_FlyingThings3D(
-            root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
-            dstype="frames_cleanpass",
-            split="validation",
-            crop=False,
-            crop_type="center",
-            crop_size=args.crop_size,
-            augment=False,
-            norm_params=norm_params
-        )
-        loaders["things_clean"] = val_loader
+    # if 'things_clean' in ds_list:
+    #     val_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
+    #     val_loader.add_FlyingThings3D(
+    #         root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
+    #         dstype="frames_cleanpass",
+    #         split="validation",
+    #         crop=False,
+    #         crop_type="center",
+    #         crop_size=args.crop_size,
+    #         augment=False,
+    #         norm_params=norm_params
+    #     )
+    #     loaders["things_clean"] = val_loader
 
-    if 'things_final' in ds_list:
-        val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=4, pin_memory=True)
-        val_loader.add_FlyingThings3D(
-            root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
-            dstype="frames_finalpass",
-            split="validation",
-            crop=False,
-            crop_type="center",
-            crop_size=args.crop_size,
-            augment=False,
-            norm_params=norm_params
-        )
-        loaders["things_final"]=val_loader
+    # if 'things_final' in ds_list:
+    #     val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=4, pin_memory=True)
+    #     val_loader.add_FlyingThings3D(
+    #         root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
+    #         dstype="frames_finalpass",
+    #         split="validation",
+    #         crop=False,
+    #         crop_type="center",
+    #         crop_size=args.crop_size,
+    #         augment=False,
+    #         norm_params=norm_params
+    #     )
+    #     loaders["things_final"]=val_loader
 
-    if 'kubric' in ds_list:
-        val_loader = CustomDataloaderCreator(batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
-        val_loader.add_Kubric(
-            root_dir="../KubricFlow",
-            split="validation",
-            crop=False,
-            crop_type="center",
-            crop_size=args.crop_size,
-            augment=False,
-            norm_params=norm_params
-        )
-        loaders["kubric"] = val_loader
+    # if 'kubric' in ds_list:
+    #     val_loader = CustomDataloaderCreator(batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
+    #     val_loader.add_Kubric(
+    #         root_dir="../KubricFlow",
+    #         split="validation",
+    #         crop=False,
+    #         crop_type="center",
+    #         crop_size=args.crop_size,
+    #         augment=False,
+    #         norm_params=norm_params
+    #     )
+    #     loaders["kubric"] = val_loader
 
 
     model = build_model(
@@ -246,10 +279,11 @@ def main():
 
     for name in loaders:
         print(f"Evaluating {name}:")
-        loader = loaders[name].get_dataloader()
+        loader = loaders[name]['loader'].get_dataloader()
+
+        pad_divisor = loaders[name]['pad_div'][args.model]
 
         if name == "kitti":
-            args.pad_divisor = 64
             metric = epe_f1_metric
 
         eval_model(
@@ -257,7 +291,7 @@ def main():
             loader, 
             metric=metric, 
             device='0', 
-            pad_divisor=args.pad_divisor, 
+            pad_divisor=pad_divisor, 
             flow_scale=args.flow_scale
         )
 

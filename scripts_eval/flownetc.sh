@@ -4,11 +4,11 @@
 module load cuda/11.3
 cd ../
 
-# pwcnet_step1200000
+# flownetc_step1200000
 # chairs sintel kitti
-python eval.py --model "PWCNet" \
-                --model_cfg "./configs/pwcnet/models/pwcnet.yaml" \
-                --model_weights_path "../results/pwcnet/ckpts/exp001/pwcnet_step1200000.pth" \
+python eval.py --model "FlowNetC" \
+                --model_cfg "./configs/flownet_c/models/flownet_c.yaml" \
+                --model_weights_path "../results/flownet_c/ckpts/exp001/flownetc_best.pth" \
                 --dataset 'kitti' \
                 --batch_size 1 \
                 --mean 0.0 0.0 0.0 \
