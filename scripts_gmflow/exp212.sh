@@ -1,31 +1,28 @@
 #!/bin/bash
 
-#SBATCH --time=168:00:00
-#SBATCH --job-name=gmflow_exp210
+#SBATCH --time=120:00:00
+#SBATCH --job-name=gmflow_exp212
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a6000:4
+#SBATCH --gres=gpu:a5000:6
 #SBATCH --cpus-per-task=8
-#SBATCH --output=../../results/gmflow/outs/exp210.out
+#SBATCH --output=../../results/gmflow/outs/exp212.out
 
 # GMFlowV2 training with RAFT Augmentation, GMFflow Training settings(difference lies in loss fn gamma and scheduler anneal strategy) and GMFlow Normalization
 # SwinV2 Encoder
-# Effective batch size = 8
-
+# Effective batch size = 64
 
 module load cuda/11.3
-nvidia-smi
-
 cd ../
 python train.py --model "GMFlowV2" \
-                --model_cfg "./configs/gmflow/models/gmflow_v11.yaml" \
-                --train_cfg "./configs/gmflow/trainer/kubrics_v0_0.yaml" \
+                --model_cfg "./configs/gmflow/models/gmflow_v04.yaml" \
+                --train_cfg "./configs/gmflow/trainer/kubrics_v1_0.yaml" \
                 --device "all" \
-                --log_dir "../results/gmflow/logs/exp210" \
-                --ckpt_dir "../results/gmflow/ckpts/exp210" \
-                --batch_size 2 \
+                --log_dir "../results/gmflow/logs/exp212" \
+                --ckpt_dir "../results/gmflow/ckpts/exp212" \
+                --batch_size 4 \
                 --start_iteration 1 \
                 --num_steps 1200100 \
                 --train_crop_size 368 496 \
                 --val_crop_size 368 496 \
-                --world_size 4
+                --world_size 6

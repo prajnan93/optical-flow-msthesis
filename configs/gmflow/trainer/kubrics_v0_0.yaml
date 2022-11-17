@@ -1,0 +1,112 @@
+DATA:
+  TRAIN_DATASET:
+    NAME: "kubric"
+    ROOT_DIR: "../KubricFlow"
+  VAL_DATASET:
+    NAME: "kubric"
+    ROOT_DIR: "../KubricFlow"
+  BATCH_SIZE: 4
+  NUM_WORKERS: 4
+  PIN_MEMORY: True
+  APPEND_VALID_MASK: True
+  SHUFFLE: True
+  TRAIN_CROP_SIZE: [384, 512]
+  VAL_CROP_SIZE: [384, 512]
+  NORM_PARAMS: {"use":True, "mean":[0.485, 0.456, 0.406], "std":[0.229, 0.224, 0.225]}
+  AUGMENTATION:
+    USE: True
+    PARAMS:
+      TRAINING:
+        SPATIAL_AUG_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0.8, 
+          "stretch_prob": 0.8, 
+          "min_scale": -0.1, 
+          "max_scale": 1.0, 
+          "max_stretch": 0.2, 
+          "flip": True, 
+          "h_flip_prob": 0.5, 
+          "v_flip_prob": 0.1
+        }
+        COLOR_AUG_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0.2, 
+          "brightness": 0.4, 
+          "contrast": 0.4, 
+          "saturation": 0.4, 
+          "hue": 0.15915494309189535
+        }
+        ERASER_AUG_PARAMS: {
+          "enabled": True,
+          "aug_prob": 0.5,
+          "bounds": [50, 100]
+        }
+        NOISE_PARAMS: {
+          "enabled": False,
+          "aug_prob": 0.5,
+          "noise_std_range": 0.06 
+        }
+        AUTOFLOW_SPATIAL_PARAMS: {
+          "enabled": False,
+          "scale": [0.3, 0.03, 0.1],
+          "rot": [0.4, 0.03],
+          "trans": [0.4, 0.03],
+          "squeeze": [0.3, 0.],
+          "black": False
+        }
+        TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+      VALIDATION:
+        SPATIAL_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        COLOR_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ERASER_AUG_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+        ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
+OPTIMIZER:
+  NAME: AdamW
+  LR: 0.0004
+  PARAMS:
+    weight_decay: 0.0001
+    betas: [0.9, 0.999]
+    eps: 1.e-08
+    amsgrad: False
+SCHEDULER:
+  USE: True
+  NAME: OneCycleLR
+  PARAMS:
+    max_lr: 0.0004
+    total_steps: 1200100
+    pct_start: 0.05
+    cycle_momentum: False
+    anneal_strategy: linear
+CRITERION:
+  CUSTOM: True
+  NAME: SequenceLoss
+  PARAMS: 
+    gamma: 0.8
+    max_flow: 400.0
+GRAD_CLIP: 
+  USE: True
+  VALUE: 1.0
+TARGET_SCALE_FACTOR: 1.0
+MIXED_PRECISION: False
+DEVICE: "all"
+DISTRIBUTED:
+  USE: True
+  WORLD_SIZE: 4
+  BACKEND: nccl
+  MASTER_ADDR: localhost
+  MASTER_PORT: "12355"
+  SYNC_BATCH_NORM: True
+LOG_DIR: "./logs"
+LOG_ITERATIONS_INTERVAL: 100
+CKPT_DIR: "./ckpts"
+CKPT_INTERVAL: 100000
+VALIDATE_INTERVAL: 1000
+VALIDATE_ON: metric
+EPOCHS: null
+NUM_STEPS: 400100
+RESUME_TRAINING:
+  CONSOLIDATED_CKPT: null
+  EPOCHS: 100
+  START_EPOCH: null

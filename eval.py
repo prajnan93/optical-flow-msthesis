@@ -153,9 +153,9 @@ def main():
                 root_dir="../../../Datasets/MPI_Sintel/",
                 split="training",
                 dstype="clean",
-                crop=False,
+                crop=True,
                 crop_type="center",
-                crop_size=args.crop_size,
+                crop_size=[384, 1024],
                 augment=False,
                 norm_params=norm_params
             )
@@ -166,9 +166,9 @@ def main():
                 root_dir="../../../Datasets/MPI_Sintel/",
                 split="training",
                 dstype="final",
-                crop=False,
+                crop=True,
                 crop_type="center",
-                crop_size=args.crop_size,
+                crop_size=[384, 1024],
                 augment=False,
                 norm_params=norm_params
             )
@@ -176,20 +176,20 @@ def main():
         loaders['sintel_clean'] = {
             'loader': sintel_clean_loader,
             'pad_div': {
-                'RAFT':8,
-                'PWCNet':16,
-                'FlowNetC':16,
-                'GMFlowV2':16
+                'RAFT':1,
+                'PWCNet':1,
+                'FlowNetC':1,
+                'GMFlowV2':1
             }
         }
         
         loaders['sintel_final'] = {
             'loader': sintel_final_loader,
             'pad_div': {
-                'RAFT':8,
-                'PWCNet':16,
-                'FlowNetC':16,
-                'GMFlowV2':16
+                'RAFT':1,
+                'PWCNet':1,
+                'FlowNetC':1,
+                'GMFlowV2':1
             }
         }
         
@@ -200,17 +200,17 @@ def main():
                 split="training",
                 crop=True,
                 crop_type="center",
-                crop_size=[368, 1216], # 368, 1216, #370, 1224
+                crop_size=[320, 1216], # 368, 1216, #370, 1224
                 augment=False,
                 norm_params=norm_params
             )
         loaders['kitti'] = {
             'loader': kitti_loader,
             'pad_div': {
-                'RAFT':8,
-                'PWCNet':32,
-                'FlowNetC':32,
-                'GMFlowV2':8
+                'RAFT':1,
+                'PWCNet':1,
+                'FlowNetC':1,
+                'GMFlowV2':1
             }
         }
         

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=330:00:00
+#SBATCH --time=168:00:00
 #SBATCH --job-name=gmflow_exp211
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
@@ -15,7 +15,7 @@
 module load cuda/11.3
 cd ../
 python train.py --model "GMFlowV2" \
-                --model_cfg "./configs/gmflow/models/gmflow_v11.yaml" \
+                --model_cfg "./configs/gmflow/models/gmflow_v12.yaml" \
                 --train_cfg "./configs/gmflow/trainer/kubrics_v1_0.yaml" \
                 --device "all" \
                 --log_dir "../results/gmflow/logs/exp211" \
