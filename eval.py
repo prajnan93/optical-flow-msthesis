@@ -120,6 +120,9 @@ def main():
 
     loaders = {}
 
+
+    print(f"Evaluating checkpoint {args.model_weights_path}")
+    
     ds_list = args.dataset.lower().split()
 
     if 'chairs' in ds_list:
@@ -176,7 +179,7 @@ def main():
                 'RAFT':8,
                 'PWCNet':16,
                 'FlowNetC':16,
-                'GMFlowV2':8
+                'GMFlowV2':16
             }
         }
         
@@ -186,7 +189,7 @@ def main():
                 'RAFT':8,
                 'PWCNet':16,
                 'FlowNetC':16,
-                'GMFlowV2':8
+                'GMFlowV2':16
             }
         }
         

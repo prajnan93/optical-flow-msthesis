@@ -4,7 +4,7 @@ import torch
 from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
 
-from nnflow import eval_model, CustomDataloaderCreator, GMFlow, GMFlowV2, BasicEncoderV2
+from nnflow import eval_model, CustomDataloaderCreator, GMFlowV2, BasicEncoderV2
 
 def main():
 
@@ -488,8 +488,7 @@ def main():
     #     print("Loading optimizer and scheduler checkpoints to resume training")
     #     optimizer_state_dict = state_dict["optimizer_state_dict"]
     #     scheduler_state_dict = state_dict["scheduler_state_dict"] 
-
-                
+     
 
     if training_cfg.DISTRIBUTED.USE is True:
         trainer = DistributedTrainer(
