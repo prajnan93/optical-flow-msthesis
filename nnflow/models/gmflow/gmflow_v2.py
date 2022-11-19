@@ -39,10 +39,10 @@ class GMFlowV2(BaseModule):
         
         self.use_sine_pos_embed=cfg.MODEL.USE_SINE_POS_EMBED
 
-        # CNN backbone
+        # Backbone
         self.backbone = build_encoder(cfg.ENCODER)
 
-        # Transformer
+        # Transformer Feature Enhancement with alternating self attention and cross attention
         self.transformer = FeatureTransformer(num_layers=self.num_transformer_layers,
                                               d_model=self.feature_channels,
                                               nhead=self.num_head,

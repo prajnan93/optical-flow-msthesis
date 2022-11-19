@@ -9,7 +9,7 @@ cd ../
 python eval.py --model "RAFT" \
                 --raft_iters 32 \
                 --model_cfg "./configs/raft/models/raft.yaml" \
-                --model_weights_path "../results/raft/ckpts/exp205/raft_step100000.pth" \
+                --model_weights_path "../results/raft/ckpts/exp001/raft_step100000.pth" \
                 --dataset 'chairs sintel kitti' \
                 --batch_size 4 \
                 --mean 127.5 127.5 127.5 \
