@@ -52,7 +52,7 @@ DATA:
           "rot": [0.4, 0.03],
           "trans": [0.4, 0.03],
           "squeeze": [0.3, 0.],
-          "black": True
+          "black": False               # Disable out-of-boundary cropping
         }
         TRANSLATE_PARAMS: {"enabled": False, "aug_prob": 0.0}
         ROTATE_PARAMS: {"enabled": False, "aug_prob": 0.0}

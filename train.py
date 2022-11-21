@@ -469,9 +469,6 @@ def main():
         )
         
     model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
-
-
-    print(f"Model Encoder: {model.cfg.ENCODER.NAME}")
     
     model_state_dict = None
     optimizer_state_dict = None

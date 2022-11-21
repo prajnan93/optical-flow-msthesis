@@ -148,25 +148,27 @@ def main():
         }
 
     if 'sintel' in ds_list:
+
+        crop = False if args.model == "RAFT" else True
+
         sintel_clean_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
         sintel_clean_loader.add_MPISintel(
                 root_dir="../../../Datasets/MPI_Sintel/",
                 split="training",
                 dstype="clean",
-                crop=True,
+                crop=crop,
                 crop_type="center",
                 crop_size=[384, 1024],
                 augment=False,
                 norm_params=norm_params
             )
 
-
         sintel_final_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
         sintel_final_loader.add_MPISintel(
                 root_dir="../../../Datasets/MPI_Sintel/",
                 split="training",
                 dstype="final",
-                crop=True,
+                crop=crop,
                 crop_type="center",
                 crop_size=[384, 1024],
                 augment=False,
@@ -176,7 +178,7 @@ def main():
         loaders['sintel_clean'] = {
             'loader': sintel_clean_loader,
             'pad_div': {
-                'RAFT':1,
+                'RAFT':8,
                 'PWCNet':1,
                 'FlowNetC':1,
                 'GMFlowV2':1
@@ -186,7 +188,7 @@ def main():
         loaders['sintel_final'] = {
             'loader': sintel_final_loader,
             'pad_div': {
-                'RAFT':1,
+                'RAFT':8,
                 'PWCNet':1,
                 'FlowNetC':1,
                 'GMFlowV2':1
@@ -263,6 +265,9 @@ def main():
         cfg_path=args.model_cfg, 
         custom_cfg=True
     )
+
+    if args.model == "GMFlowV2":
+        print(model.backbone)
 
     state_dict = torch.load(args.model_weights_path, map_location=torch.device('cpu'))
     if "model_state_dict" in state_dict:
