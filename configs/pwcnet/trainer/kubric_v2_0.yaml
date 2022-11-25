@@ -30,7 +30,7 @@ DATA:
         }
         COLOR_AUG_PARAMS: {
           "enabled": True,
-          "aug_prob": 0.2, 
+          "aug_prob": 0.2, # asymmetric color aug probability
           "brightness": 0.4, 
           "contrast": 0.4, 
           "saturation": 0.4, 

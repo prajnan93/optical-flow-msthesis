@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/gmflow/outs/exp223.out
 
-# GMFlowV2 training with RAFT  Training settings(difference lies in loss fn gamma and scheduler anneal strategy) and GMFlow Normalization, Autoflow Augmentations
+# GMFlowV2 training with RAFT  Training settings(difference lies in loss fn gamma and scheduler anneal strategy) and Autoflow Augmentations
 # Neighborhood Attention Encoder
 # Effective batch size = 8
 

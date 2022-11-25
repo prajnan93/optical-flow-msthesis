@@ -37,8 +37,8 @@ DATA:
           "hue": 0.15915494309189535
         }
         ERASER_AUG_PARAMS: {
-          "enabled": True,
-          "aug_prob": 0.5,
+          "enabled": False, # disable random erasing
+          "aug_prob": 0.0,
           "bounds": [50, 100]
         }
         NOISE_PARAMS: {

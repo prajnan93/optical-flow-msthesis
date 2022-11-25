@@ -5,8 +5,8 @@ DATA:
   VAL_DATASET:
     NAME: "flyingchairs"
     ROOT_DIR: "../../../Datasets/FlyingChairs_release/data" 
-  BATCH_SIZE: 4
-  NUM_WORKERS: 1
+  BATCH_SIZE: 10
+  NUM_WORKERS: 4
   PIN_MEMORY: True
   APPEND_VALID_MASK: True
   SHUFFLE: True

@@ -5,14 +5,14 @@ DATA:
   VAL_DATASET:
     NAME: "mpisintel"
     ROOT_DIR: "../../../Datasets/MPI_Sintel/"
-  BATCH_SIZE: 2
+  BATCH_SIZE: 4
   NUM_WORKERS: 4
   PIN_MEMORY: True
-  APPEND_VALID_MASK: False
-  TRAIN_CROP_SIZE: [384, 448]
-  VAL_CROP_SIZE: [384, 448]
+  APPEND_VALID_MASK: True
   SHUFFLE: True
-  NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
+  TRAIN_CROP_SIZE: [384, 512]
+  VAL_CROP_SIZE: [384, 512]
+  NORM_PARAMS: {"use":True, "mean":[0.485, 0.456, 0.406], "std":[0.229, 0.224, 0.225]}
   AUGMENTATION:
     USE: True
     PARAMS:
@@ -37,8 +37,8 @@ DATA:
           "hue": 0.15915494309189535
         }
         ERASER_AUG_PARAMS: {
-          "enabled": True,
-          "aug_prob": 0.5,
+          "enabled": False, # disable random erasing
+          "aug_prob": 0.0,
           "bounds": [50, 100]
         }
         NOISE_PARAMS: {
@@ -75,26 +75,24 @@ SCHEDULER:
   NAME: OneCycleLR
   PARAMS:
     max_lr: 0.0004
-    total_steps: 1200100
+    total_steps: 100100
     pct_start: 0.05
     cycle_momentum: False
     anneal_strategy: linear
 CRITERION:
   CUSTOM: True
-  NAME: MultiScaleLoss
-  PARAMS:
-    norm: "l2" 
-    weights: [0.32, 0.08, 0.02, 0.01, 0.005]
-    average: "sum"
-    resize_flow: "downsample" 
+  NAME: SequenceLoss
+  PARAMS: 
+    gamma: 0.8
+    max_flow: 400.0
 GRAD_CLIP: 
   USE: True
   VALUE: 1.0
-TARGET_SCALE_FACTOR: 20.0
+TARGET_SCALE_FACTOR: 1.0
 MIXED_PRECISION: False
-DEVICE: "all"
+DEVICE: "0"
 DISTRIBUTED:
-  USE: True
+  USE: False
   WORLD_SIZE: 4
   BACKEND: nccl
   MASTER_ADDR: localhost
@@ -107,7 +105,7 @@ CKPT_INTERVAL: 100000
 VALIDATE_INTERVAL: 1000
 VALIDATE_ON: metric
 EPOCHS: null
-NUM_STEPS: 1200100
+NUM_STEPS: 100100
 RESUME_TRAINING:
   CONSOLIDATED_CKPT: null
   EPOCHS: 100

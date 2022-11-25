@@ -5,13 +5,13 @@ DATA:
   VAL_DATASET:
     NAME: "mpisintel"
     ROOT_DIR: "../../../Datasets/MPI_Sintel/"
-  BATCH_SIZE: 2
+  BATCH_SIZE: 8
   NUM_WORKERS: 4
   PIN_MEMORY: True
   APPEND_VALID_MASK: False
+  SHUFFLE: True
   TRAIN_CROP_SIZE: [384, 448]
   VAL_CROP_SIZE: [384, 448]
-  SHUFFLE: True
   NORM_PARAMS: {"use":True, "mean":[0.0, 0.0, 0.0], "std":[255.0, 255.0, 255.0]}
   AUGMENTATION:
     USE: True
@@ -30,15 +30,15 @@ DATA:
         }
         COLOR_AUG_PARAMS: {
           "enabled": True,
-          "aug_prob": 0.2, # asymmetric color aug probability
+          "aug_prob": 0.2, 
           "brightness": 0.4, 
           "contrast": 0.4, 
           "saturation": 0.4, 
           "hue": 0.15915494309189535
         }
         ERASER_AUG_PARAMS: {
-          "enabled": True,
-          "aug_prob": 0.5,
+          "enabled": False, # disable random erasing
+          "aug_prob": 0.0,
           "bounds": [50, 100]
         }
         NOISE_PARAMS: {
@@ -92,14 +92,13 @@ GRAD_CLIP:
   VALUE: 1.0
 TARGET_SCALE_FACTOR: 20.0
 MIXED_PRECISION: False
-DEVICE: "all"
+DEVICE: "0"
 DISTRIBUTED:
-  USE: True
-  WORLD_SIZE: 4
+  USE: False
+  WORLD_SIZE: 2
   BACKEND: nccl
   MASTER_ADDR: localhost
   MASTER_PORT: "12355"
-  SYNC_BATCH_NORM: True
 LOG_DIR: "./logs"
 LOG_ITERATIONS_INTERVAL: 100
 CKPT_DIR: "./ckpts"
