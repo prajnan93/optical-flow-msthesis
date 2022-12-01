@@ -5,6 +5,11 @@ from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
 from ezflow.models import build_model
 
 from nnflow import eval_model, CustomDataloaderCreator, GMFlowV2, BasicEncoderV2
+from nnflow.models.flownet_c_v2 import FlowNetC_V2
+
+
+def count_params(model):
+    return str(sum(p.numel() for p in model.parameters() if p.requires_grad) / 1000000) + "M params"
 
 def main():
 
@@ -470,6 +475,8 @@ def main():
         
     model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
     
+    print(f"{args.model} model params: {count_params(model)}")
+
     model_state_dict = None
     optimizer_state_dict = None
     scheduler_state_dict = None

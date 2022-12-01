@@ -21,6 +21,6 @@ python train.py --model "RAFT" \
                 --ckpt_interval 50000 \
                 --batch_size 10 \
                 --start_iteration 1 \
-                --num_steps 400100 \
+                --num_steps 200100 \
                 --train_crop_size 368 496 \
                 --val_crop_size 368 496 

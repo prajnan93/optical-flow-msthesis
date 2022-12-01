@@ -4,7 +4,7 @@
 #SBATCH --job-name=gmflow_exp227
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
-#SBATCH --gres=gpu:a5000:2
+#SBATCH --gres=gpu:a6000:2
 #SBATCH --cpus-per-task=8
 #SBATCH --output=../../results/gmflow/outs/exp227.out
 

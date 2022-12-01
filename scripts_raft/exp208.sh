@@ -9,13 +9,14 @@
 #SBATCH --output=../../results/raft/outs/exp208.out
 
 # RAFT training with RAFT Training settings, Kubric dataset and AutoFlow Augmentations
-# Disable random noise
+# Disable black augmentation
+
 
 module load cuda/11.3
 cd ../
 python train.py --model "RAFT" \
                 --model_cfg "./configs/raft/models/raft.yaml" \
-                --train_cfg "./configs/raft/trainer/kubric_v2_3.yaml" \
+                --train_cfg "./configs/raft/trainer/kubric_v2_5.yaml" \
                 --device "0" \
                 --log_dir "../results/raft/logs/exp208" \
                 --ckpt_dir "../results/raft/ckpts/exp208" \

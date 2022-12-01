@@ -3,7 +3,7 @@ ENCODER:
   NAME: BasicEncoderV2
   IN_CHANNELS: 3
   OUT_CHANNELS: 256
-  NORM: instance
+  NORM: none
   P_DROPOUT: 0.0
   LAYER_CONFIG: [64, 128, 256]
   CORR_CONFIG: [512, 512, 1024]

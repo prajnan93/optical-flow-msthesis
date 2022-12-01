@@ -9,13 +9,13 @@
 #SBATCH --output=../../results/raft/outs/exp206.out
 
 # RAFT training with RAFT Training settings, Kubric dataset and AutoFlow Augmentations
-# Perform hard augmentation for Asymmetric Color Probability
+# Disable random noise
 
 module load cuda/11.3
 cd ../
 python train.py --model "RAFT" \
                 --model_cfg "./configs/raft/models/raft.yaml" \
-                --train_cfg "./configs/raft/trainer/kubric_v2_1.yaml" \
+                --train_cfg "./configs/raft/trainer/kubric_v2_3.yaml" \
                 --device "0" \
                 --log_dir "../results/raft/logs/exp206" \
                 --ckpt_dir "../results/raft/ckpts/exp206" \

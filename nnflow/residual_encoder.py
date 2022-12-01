@@ -81,15 +81,15 @@ class BasicEncoderV2(nn.Module):
             start_channels = layer_config[i]
 
 
-        #self.regress_layer = nn.Conv2d(layer_config[-1], out_channels, kernel_size=1)
+        self.encoder = layers
+        if self.intermediate_features is False:
+            self.encoder = nn.Sequential(*self.encoder)
+
+        self.regress_layer = nn.Conv2d(layer_config[-1], out_channels, kernel_size=1)
 
         self.dropout = nn.Identity()
         if self.training and p_dropout > 0:
             self.dropout = nn.Dropout2d(p=p_dropout)
-
-        self.encoder = layers
-        if self.intermediate_features is False:
-            self.encoder = nn.Sequential(*self.encoder)
 
         self._init_weights()
 
@@ -135,7 +135,7 @@ class BasicEncoderV2(nn.Module):
 
             # features.append(x)
 
-            x = self.dropout(x)
+            x = self.dropout(self.regress_layer(x))
             features[-1] = x
 
             return features
