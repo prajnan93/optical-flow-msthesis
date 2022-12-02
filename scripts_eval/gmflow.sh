@@ -8,7 +8,7 @@ cd ../
 # gmflowv2_step1200000
 python eval.py --model "GMFlowV2" \
                 --model_cfg "./configs/gmflow/models/gmflow_v13.yaml" \
-                --model_weights_path "../results/gmflow/ckpts/exp221/gmflowv2_step100000.pth" \
+                --model_weights_path "../results/gmflow/ckpts/exp223/gmflowv2_step1200000.pth" \
                 --dataset 'chairs sintel kitti' \
                 --batch_size 4 \
                 --mean 0.485 0.456 0.406 \

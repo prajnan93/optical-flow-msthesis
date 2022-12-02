@@ -8,7 +8,7 @@ cd ../
 # chairs sintel kitti
 python eval.py --model "FlowNetC" \
                 --model_cfg "./configs/flownet_c/models/flownet_c.yaml" \
-                --model_weights_path "../results/flownet_c/ckpts/exp200/flownetc_step1200000.pth" \
+                --model_weights_path "../results/flownet_c/ckpts/exp208/flownetc_step1200000.pth" \
                 --dataset 'chairs sintel kitti' \
                 --batch_size 4 \
                 --mean 0.0 0.0 0.0 \

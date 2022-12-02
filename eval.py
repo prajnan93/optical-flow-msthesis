@@ -11,6 +11,9 @@ from nnflow.inference import endpointerror
 import warnings
 warnings.filterwarnings("ignore")
 
+def count_params(model):
+    return str(sum(p.numel() for p in model.parameters() if p.requires_grad) / 1000000) + "M params"
+
 def epe_f1_metric(pred, target):
     """
     Endpoint error
@@ -119,10 +122,7 @@ def main():
     norm_params = {"use":True, "mean":args.mean, "std":args.std}
 
     loaders = {}
-
-
-    print(f"Evaluating checkpoint {args.model_weights_path}")
-    
+   
     ds_list = args.dataset.lower().split()
 
     if 'chairs' in ds_list:
@@ -278,6 +278,9 @@ def main():
         model_state_dict = state_dict
 
     model.load_state_dict(model_state_dict)
+
+    print(f"Evaluating checkpoint {args.model_weights_path}")
+    print(f"{args.model} parameters: {count_params(model)}")
 
     if args.raft_iters is not None:
         model.cfg.UPDATE_ITERS = args.raft_iters

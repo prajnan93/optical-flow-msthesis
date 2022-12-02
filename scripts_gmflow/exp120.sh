@@ -25,6 +25,6 @@ python train.py --model "GMFlowV2" \
                 --batch_size 10 \
                 --start_iteration 1 \
                 --num_steps 1200100 \
-                --train_crop_size 368 496 \
+                --train_crop_size 400 720 \
                 --val_crop_size 368 496 \
                 --freeze_batch_norm
