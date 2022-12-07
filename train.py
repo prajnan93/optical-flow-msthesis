@@ -482,6 +482,7 @@ def main():
     scheduler_state_dict = None
 
     if args.resume_ckpt is not None:
+        training_cfg.DISTRIBUTED.USE = False
         state_dict = torch.load(args.resume_ckpt, map_location=torch.device('cpu'))
         if "model_state_dict" in state_dict:
             print("SAVED STATES: ", state_dict.keys())
