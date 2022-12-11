@@ -20,7 +20,7 @@ python train.py --model "RAFT" \
                 --device "0" \
                 --log_dir "../results/raft/logs/exp209" \
                 --ckpt_dir "../results/raft/ckpts/exp209" \
-                --ckpt_interval 20000 \
+                --ckpt_interval 10000 \
                 --batch_size 10 \
                 --start_iteration 1 \
                 --num_steps 100100 \

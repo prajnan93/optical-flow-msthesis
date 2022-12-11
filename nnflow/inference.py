@@ -1,5 +1,5 @@
 import time
-
+from datetime import timedelta
 import torch
 from torch.nn import DataParallel
 
@@ -38,7 +38,7 @@ def endpointerror(pred, target):
     return metrics
 
 
-def warmup(model, dataloader, device, pad_divisor=1):
+def warmup(model, dataloader, device, pad_divisor=1, profile=False):
     """Performs an iteration of dataloading and model prediction to warm up CUDA device
 
     Parameters
@@ -52,24 +52,41 @@ def warmup(model, dataloader, device, pad_divisor=1):
     pad_divisor : int, optional
         The divisor to make the image dimensions evenly divisible by using padding, by default 1
     """
+    if not profile:
+        inp, target = next(iter(dataloader))
+        img1, img2 = inp
 
-    inp, target = next(iter(dataloader))
-    img1, img2 = inp
+        padder = InputPadder(img1.shape, divisor=pad_divisor)
+        img1, img2 = padder.pad(img1, img2)
 
-    padder = InputPadder(img1.shape, divisor=pad_divisor)
-    # print(img1.shape, img2.shape)
-    img1, img2 = padder.pad(img1, img2)
-    # print(img1.shape, img2.shape)
+        img1, img2, target = (
+            img1.to(device),
+            img2.to(device),
+            target.to(device),
+        )
 
-    img1, img2, target = (
-        img1.to(device),
-        img2.to(device),
-        target.to(device),
-    )
+        _ = model(img1, img2)
 
-    _ = model(img1, img2)
+        del img1, img2, target, _
+        return
+    
+    warm_up_count=0
+    for img1, img2 in dataloader:
+        padder = InputPadder(img1.shape, divisor=pad_divisor)
+        img1, img2 = padder.pad(img1, img2)
 
-    del img1, img2, target, _
+        img1, img2 = img1.to(device), img2.to(device) 
+
+        torch.cuda.synchronize()
+        _ = model(img1, img2)
+        torch.cuda.synchronize()
+
+        del img1, img2,  _
+        warm_up_count += 1
+        if warm_up_count==100:
+            break
+
+    print(f"Warm up for {warm_up_count} iterations completed!!")
 
 
 def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divisor=1):
@@ -173,14 +190,93 @@ def run_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divi
     return metrics
 
 
+
+def profile_inference(model, dataloader, device, metric_fn, flow_scale=1.0, pad_divisor=1):
+    """
+    Uses a model to perform inference on a dataloader and captures inference time and evaluation metric
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        Model to be used for prediction / inference
+    dataloader : torch.utils.data.DataLoader
+        Dataloader to be used for prediction / inference
+    device : torch.device
+        Device (CUDA / CPU) to be used for prediction / inference
+    metric_fn : function
+        Function to be used to calculate the evaluation metric
+    flow_scale : float, optional
+        Scale factor to be applied to the predicted flow
+    pad_divisor : int, optional
+        The divisor to make the image dimensions evenly divisible by using padding, by default 1
+
+    Returns
+    -------
+    metric_meter : AverageMeter
+        AverageMeter object containing the evaluation metric information
+    avg_inference_time : float
+        Average inference time
+
+    """
+
+    metric_meter = AverageMeter()
+    times = []
+
+    inp, target = next(iter(dataloader))
+    batch_size = target.shape[0]
+
+    padder = InputPadder(inp[0].shape, divisor=pad_divisor)
+
+    f1_list = []
+
+    with torch.no_grad():
+
+        for img1, img2 in dataloader:
+
+            img1, img2 = img1.to(device), img2.to(device) 
+            img1, img2 = padder.pad(img1, img2)
+  
+
+            torch.cuda.synchronize()
+
+            start_time = time.time()
+
+            _ = model(img1, img2)
+
+            torch.cuda.synchronize()
+
+            end_time = time.time()
+            times.append(end_time - start_time)
+
+            del _
+
+    avg_inference_time = sum(times) / len(times)
+    avg_inference_time /= batch_size  # Average inference time per sample
+
+    fps = None
+
+    if avg_inference_time != 0:
+        fps =  1/avg_inference_time
+
+    metrics = {
+        "avg_epe":None,
+        "avg_inference_time": avg_inference_time * 1000,
+        "FPS": fps,
+        "f1_all": None
+    }
+    return metrics
+
+
+
+
 def eval_model(
     model,
     dataloader,
     device,
     metric=endpointerror,
-    profiler=None,
     flow_scale=1.0,
-    pad_divisor=1
+    pad_divisor=1,
+    profile=False
 ):
     """
     Evaluates a model on a dataloader and optionally profiles model characteristics such as memory usage, inference time, and evaluation metric
@@ -241,11 +337,11 @@ def eval_model(
 
     metric_fn = metric
 
-    warmup(model, dataloader, device, pad_divisor=pad_divisor)
+    warmup(model, dataloader, device, pad_divisor=pad_divisor, profile=profile)
     if torch.cuda.is_available():
         torch.cuda.synchronize()
 
-    if profiler is None:
+    if not profile:
         metrics = run_inference(
             model,
             dataloader,
@@ -255,13 +351,11 @@ def eval_model(
             pad_divisor=pad_divisor,
         )
     else:
-        metric_meter, _ = profile_inference(
+        metrics = profile_inference(
             model,
             dataloader,
             device,
             metric_fn,
-            profiler,
-            flow_scale=flow_scale,
             pad_divisor=pad_divisor,
         )
 
@@ -272,7 +366,7 @@ def eval_model(
 
     print(f"Average EPE = {avg_epe}")
     print(f"F1 all = {f1_all}")
-    print(f"Average Inference time = {avg_inference_time}")
+    print(f"Average Inference time = {avg_inference_time} milliseconds")
     print(f"Average FPS = {FPS}")
     print("-"*100,"\n")
 

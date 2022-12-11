@@ -148,6 +148,9 @@ def main():
     training_cfg.MIXED_PRECISION = args.use_mixed_precision
     training_cfg.FREEZE_BATCH_NORM = args.freeze_batch_norm
 
+    if args.resume:
+        training_cfg.DISTRIBUTED.USE = False
+
     if args.world_size is not None:
         training_cfg.DISTRIBUTED.WORLD_SIZE = args.world_size
 

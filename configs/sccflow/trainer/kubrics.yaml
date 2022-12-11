@@ -42,7 +42,7 @@ DATA:
           "bounds": [50, 100]
         }
         NOISE_PARAMS: {
-          "enabled": False, # Disable noise
+          "enabled": True,
           "aug_prob": 0.5,
           "noise_std_range": 0.06 
         }

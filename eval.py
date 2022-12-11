@@ -6,6 +6,7 @@ import numpy as np
 from ezflow.data import DataloaderCreator
 from ezflow.models import build_model
 from nnflow import *
+from nnflow.models.flownet_c_v2 import FlowNetC_V2
 from nnflow.inference import endpointerror
 
 import warnings
@@ -125,6 +126,8 @@ def main():
    
     ds_list = args.dataset.lower().split()
 
+    profile=False
+
     if 'chairs' in ds_list:
         chair_loader = DataloaderCreator(batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
         chair_loader.add_FlyingChairs(
@@ -142,8 +145,9 @@ def main():
             'pad_div': {
                 'RAFT':1,
                 'PWCNet':1,
-                'FlowNetC':1,
-                'GMFlowV2':1
+                'FlowNetC_V2':1,
+                'GMFlowV2':1,
+                'SCCFlow':1
             }
         }
 
@@ -180,8 +184,9 @@ def main():
             'pad_div': {
                 'RAFT':8,
                 'PWCNet':1,
-                'FlowNetC':1,
-                'GMFlowV2':1
+                'FlowNetC_V2':1,
+                'GMFlowV2':1,
+                'SCCFlow':1
             }
         }
         
@@ -190,11 +195,65 @@ def main():
             'pad_div': {
                 'RAFT':8,
                 'PWCNet':1,
-                'FlowNetC':1,
-                'GMFlowV2':1
+                'FlowNetC_V2':1,
+                'GMFlowV2':1,
+                'SCCFlow':1
             }
         }
         
+
+    if 'sintel_test' in ds_list:
+
+        crop = True #if args.model == "RAFT" else True
+        profile = True
+        sintel_clean_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
+        sintel_clean_loader.add_MPISintel(
+                root_dir="../../../Datasets/MPI_Sintel/",
+                split="validation",
+                dstype="clean",
+                crop=crop,
+                crop_type="center",
+                crop_size=[448, 1024],
+                augment=False,
+                norm_params=norm_params
+            )
+
+        sintel_final_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
+        sintel_final_loader.add_MPISintel(
+                root_dir="../../../Datasets/MPI_Sintel/",
+                split="validation",
+                dstype="final",
+                crop=crop,
+                crop_type="center",
+                crop_size=[448, 1024],
+                augment=False,
+                norm_params=norm_params
+            )
+
+        loaders['sintel_clean'] = {
+            'loader': sintel_clean_loader,
+            'pad_div': {
+                'RAFT':8,
+                'PWCNet':16,
+                'FlowNetC_V2':16,
+                'GMFlowV2':1,
+                'SCCFlow':1
+            }
+        }
+        
+        loaders['sintel_final'] = {
+            'loader': sintel_final_loader,
+            'pad_div': {
+                'RAFT':8,
+                'PWCNet':16,
+                'FlowNetC_V2':16,
+                'GMFlowV2':1,
+                'SCCFlow':1
+            }
+        }
+
+
+
     if 'kitti' in ds_list:
         kitti_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, append_valid_mask=True, num_workers=4, pin_memory=True)
         kitti_loader.add_Kitti(
@@ -211,54 +270,12 @@ def main():
             'pad_div': {
                 'RAFT':1,
                 'PWCNet':1,
-                'FlowNetC':1,
-                'GMFlowV2':1
+                'FlowNetC_V2':1,
+                'GMFlowV2':1,
+                'SCCFlow':1
             }
         }
         
-
-
-    # if 'things_clean' in ds_list:
-    #     val_loader = DataloaderCreator(batch_size=args.batch_size,  shuffle=False, num_workers=4, pin_memory=True)
-    #     val_loader.add_FlyingThings3D(
-    #         root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
-    #         dstype="frames_cleanpass",
-    #         split="validation",
-    #         crop=False,
-    #         crop_type="center",
-    #         crop_size=args.crop_size,
-    #         augment=False,
-    #         norm_params=norm_params
-    #     )
-    #     loaders["things_clean"] = val_loader
-
-    # if 'things_final' in ds_list:
-    #     val_loader = DataloaderCreator(batch_size=args.batch_size, num_workers=4, pin_memory=True)
-    #     val_loader.add_FlyingThings3D(
-    #         root_dir="../../../Datasets/SceneFlow/FlyingThings3D",
-    #         dstype="frames_finalpass",
-    #         split="validation",
-    #         crop=False,
-    #         crop_type="center",
-    #         crop_size=args.crop_size,
-    #         augment=False,
-    #         norm_params=norm_params
-    #     )
-    #     loaders["things_final"]=val_loader
-
-    # if 'kubric' in ds_list:
-    #     val_loader = CustomDataloaderCreator(batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
-    #     val_loader.add_Kubric(
-    #         root_dir="../KubricFlow",
-    #         split="validation",
-    #         crop=False,
-    #         crop_type="center",
-    #         crop_size=args.crop_size,
-    #         augment=False,
-    #         norm_params=norm_params
-    #     )
-    #     loaders["kubric"] = val_loader
-
 
     model = build_model(
         args.model, 
@@ -266,7 +283,7 @@ def main():
         custom_cfg=True
     )
 
-    if args.model == "GMFlowV2":
+    if args.model == "SCCFlow":
         print(model.backbone)
 
     state_dict = torch.load(args.model_weights_path, map_location=torch.device('cpu'))
@@ -303,7 +320,8 @@ def main():
             metric=metric, 
             device='0', 
             pad_divisor=pad_divisor, 
-            flow_scale=args.flow_scale
+            flow_scale=args.flow_scale,
+            profile=profile
         )
 
     print("Evaluation completed!!")

@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #SBATCH --time=240:00:00
-#SBATCH --job-name=flownet_c_raft_encoder_no_norm_exp301_resume
+#SBATCH --job-name=flownet_c_raft_encoder_no_norm_exp301_resume2
 #SBATCH --partition=jiang
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:a6000:1
 #SBATCH --cpus-per-task=8
-#SBATCH --output=../../results/flownet_c/outs/exp301_resume.out
+#SBATCH --output=../../results/flownet_c/outs/exp301_resume2.out
 
 # FlowNetC training with RAFT Augmentation, Training settings and FlownetC Normalization
 # FLOW_SCALE_FACTOR=20
@@ -19,7 +19,7 @@ python train.py --model "FlowNetC_V2" \
                 --train_cfg "./configs/flownet_c/trainer/chairs_v1_0_ddp.yaml" \
                 --device "0" \
                 --log_dir "../results/flownet_c/logs/exp301" \
-                --ckpt_dir "../results/flownet_c/ckpts/exp301" \
+                --ckpt_dir "../results/flownet_c/ckpts/exp301_resume" \
                 --batch_size 8 \
                 --start_iteration 1000000 \
                 --num_steps 200100 \
