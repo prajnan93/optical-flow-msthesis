@@ -145,7 +145,7 @@ def main():
             'pad_div': {
                 'RAFT':1,
                 'PWCNet':1,
-                'FlowNetC_V2':1,
+                'FlowNetC':1,
                 'GMFlowV2':1,
                 'SCCFlow':1
             }
@@ -184,7 +184,7 @@ def main():
             'pad_div': {
                 'RAFT':8,
                 'PWCNet':1,
-                'FlowNetC_V2':1,
+                'FlowNetC':1,
                 'GMFlowV2':1,
                 'SCCFlow':1
             }
@@ -195,7 +195,7 @@ def main():
             'pad_div': {
                 'RAFT':8,
                 'PWCNet':1,
-                'FlowNetC_V2':1,
+                'FlowNetC':1,
                 'GMFlowV2':1,
                 'SCCFlow':1
             }
@@ -235,7 +235,7 @@ def main():
             'pad_div': {
                 'RAFT':8,
                 'PWCNet':16,
-                'FlowNetC_V2':16,
+                'FlowNetC':16,
                 'GMFlowV2':1,
                 'SCCFlow':1
             }
@@ -246,7 +246,7 @@ def main():
             'pad_div': {
                 'RAFT':8,
                 'PWCNet':16,
-                'FlowNetC_V2':16,
+                'FlowNetC':16,
                 'GMFlowV2':1,
                 'SCCFlow':1
             }
@@ -270,7 +270,7 @@ def main():
             'pad_div': {
                 'RAFT':1,
                 'PWCNet':1,
-                'FlowNetC_V2':1,
+                'FlowNetC':1,
                 'GMFlowV2':1,
                 'SCCFlow':1
             }
