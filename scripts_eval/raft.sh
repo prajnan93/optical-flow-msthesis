@@ -7,10 +7,10 @@ cd ../
 # chairs sintel kitti
 # raft_step100000 #raft_step200000 #"../../ezflow_pretrained_ckpts/raft_kubric_step100k.pth" \
 python eval.py --model "RAFT" \
-                --raft_iters 24 \
+                --raft_iters 32 \
                 --model_cfg "./configs/raft/models/raft.yaml" \
-                --model_weights_path "../../ezflow_pretrained_ckpts/raft_chairs_things_step200k.pth" \
-                --dataset 'kitti' \
+                --model_weights_path "../results/raft/ckpts/exp211/raft_step100000.pth" \
+                --dataset 'chairs sintel' \
                 --batch_size 2 \
                 --mean 127.5 127.5 127.5 \
                 --std 127.5 127.5 127.5 \

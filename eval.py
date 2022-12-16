@@ -261,17 +261,17 @@ def main():
                 split="training",
                 crop=True,
                 crop_type="center",
-                crop_size=[320, 1216], # 368, 1216, #370, 1224
+                crop_size=[370, 1224], # 368, 1216, #370, 1224
                 augment=False,
                 norm_params=norm_params
             )
         loaders['kitti'] = {
             'loader': kitti_loader,
             'pad_div': {
-                'RAFT':1,
-                'PWCNet':1,
-                'FlowNetC':1,
-                'GMFlowV2':1,
+                'RAFT':8,
+                'PWCNet':64,
+                'FlowNetC':64,
+                'GMFlowV2':16,
                 'SCCFlow':1
             }
         }
