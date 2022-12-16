@@ -234,7 +234,14 @@ def main():
             shuffle=training_cfg.DATA.SHUFFLE
         )
 
-
+    train_aug_params={
+        "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
+        "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
+        "noise_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_AUG_PARAMS,
+        "flip_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.FLIP_AUG_PARAMS,
+        "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
+        "advanced_spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ADVANCED_SPATIAL_AUG_PARAMS
+    }
     # --------------------- TRAINING DATASETS -----------------------------------#
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "flyingchairs":
         train_loader_creator.add_FlyingChairs(
@@ -243,15 +250,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
@@ -263,15 +262,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
         train_loader_creator.add_FlyingThings3D(
@@ -281,15 +272,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
@@ -300,15 +283,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
@@ -319,15 +294,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
@@ -338,15 +305,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
@@ -357,15 +316,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
@@ -377,15 +328,7 @@ def main():
             crop_type="random",
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
-            aug_params={
-                "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-                "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
-                "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
-                "noise_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_PARAMS,
-                "spatial_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.AUTOFLOW_SPATIAL_PARAMS,
-                "translate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.TRANSLATE_PARAMS,
-                "rotate_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ROTATE_PARAMS
-            },
+            aug_params=train_aug_params,
             norm_params=training_cfg.DATA.NORM_PARAMS
         )
 
