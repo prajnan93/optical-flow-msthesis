@@ -1,0 +1,15 @@
+_BASE_: "./kubric_improved_aug.yaml"
+TARGET_SCALE_FACTOR: 20.0
+DATA:
+  AUGMENTATION:
+    PARAMS:
+      TRAINING:
+        ADVANCED_SPATIAL_AUG_PARAMS: {
+          "enabled": True,
+          "scale1": 0.3,
+          "scale2": 0.1,
+          "rotate": 0.4,
+          "translate": 0.4,
+          "stretch": 0.3,
+          "enable_out_of_boundary_crop": False
+        }

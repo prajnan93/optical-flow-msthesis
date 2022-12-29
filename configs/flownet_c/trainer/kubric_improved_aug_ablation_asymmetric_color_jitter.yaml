@@ -1,0 +1,14 @@
+_BASE_: "./kubric_improved_aug.yaml"
+TARGET_SCALE_FACTOR: 20.0
+DATA:
+  AUGMENTATION:
+    PARAMS:
+      TRAINING:
+        COLOR_AUG_PARAMS: {
+          "enabled": True,
+          "asymmetric_color_aug_prob": 1.0, 
+          "brightness": 0.4, 
+          "contrast": 0.4, 
+          "saturation": 0.4, 
+          "hue": 0.15915494309189535
+        }
