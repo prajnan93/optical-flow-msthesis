@@ -1,0 +1,11 @@
+_BASE_: "./kubric_improved_aug.yaml"
+TARGET_SCALE_FACTOR: 20.0
+DATA:
+  AUGMENTATION:
+    PARAMS:
+      TRAINING:
+        ERASER_AUG_PARAMS: {
+          "enabled": False,
+          "aug_prob": 0.0,
+          "bounds": [50, 100]
+        }

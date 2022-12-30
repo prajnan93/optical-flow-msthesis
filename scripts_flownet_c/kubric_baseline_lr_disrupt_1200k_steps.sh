@@ -9,7 +9,7 @@
 #SBATCH --output=../../results/flownet_c/outs/kubric_baseline_lr_disrupt_1200k_steps.out
 
 # FlowNetC training with RAFT Augmentation, Training settings and FlownetC Normalization 
-# following Kubric -> Kubric schedule with lower learning rate of 0.000125
+# following Kubric -> Kubric schedule with a lower learning rate of 0.000125
 # Kubric dataset
 # FLOW_SCALE_FACTOR=20
 # Effective batch size = 8
