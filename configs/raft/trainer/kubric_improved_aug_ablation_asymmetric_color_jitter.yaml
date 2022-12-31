@@ -1,0 +1,13 @@
+_BASE_: "./kubric_improved_aug.yaml"
+DATA:
+  AUGMENTATION:
+    PARAMS:
+      TRAINING:
+        COLOR_AUG_PARAMS: {
+          "enabled": True,
+          "asymmetric_color_aug_prob": 1.0, # hard augmentation for asymmetric color jitter
+          "brightness": 0.4, 
+          "contrast": 0.4, 
+          "saturation": 0.4, 
+          "hue": 0.15915494309189535
+        }

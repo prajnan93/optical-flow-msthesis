@@ -1,24 +1,24 @@
 #!/bin/bash
 
 #SBATCH --time=32:00:00
-#SBATCH --job-name=raft_exp205
+#SBATCH --job-name=raft_kubric_improved_aug_ablation_asym_color_jitter
 #SBATCH --partition=jiang
 #SBATCH --mem=24G
 #SBATCH --gres=gpu:a5000:1
 #SBATCH --cpus-per-task=8
-#SBATCH --output=../../results/raft/outs/exp205.out
+#SBATCH --output=../../results/raft/outs/kubric_improved_aug_ablation_asym_color_jitter.out
 
 # RAFT training with RAFT Training settings, Kubric dataset and AutoFlow Augmentations
-# Disable Random erasing
+# Perform hard augmentation for Asymmetric Color Probability
 
 module load cuda/11.3
 cd ../
 python train.py --model "RAFT" \
                 --model_cfg "./configs/raft/models/raft.yaml" \
-                --train_cfg "./configs/raft/trainer/kubric_v2_2.yaml" \
+                --train_cfg "./configs/raft/trainer/kubric_improved_aug_ablation_asymmetric_color_jitter.yaml" \
                 --device "0" \
-                --log_dir "../results/raft/logs/exp205" \
-                --ckpt_dir "../results/raft/ckpts/exp205" \
+                --log_dir "../results/raft/logs/kubric_improved_aug_ablation_asym_color_jitter" \
+                --ckpt_dir "../results/raft/ckpts/kubric_improved_aug_ablation_asym_color_jitter" \
                 --ckpt_interval 20000 \
                 --batch_size 10 \
                 --start_iteration 1 \
