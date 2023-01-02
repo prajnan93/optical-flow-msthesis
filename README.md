@@ -3,6 +3,6 @@
 [[official thesis report(coming soon)]]()  |  [[unpublished thesis draft]](https://tinyurl.com/prajnan-ms-thesis-draft)
 
 This thesis makes the following contributions:
-- An emperical study of training settings, dataset scheduling and data augmentations on four generations of optical flow models to provide a common training recipe. 
+- An emperical study of pre-training, dataset scheduling and data augmentations on four generations of optical flow models to provide a common training recipe. 
 - Understanding the efficacy of Transformer Neural Networks for the optical flow estimation task.
 ____
