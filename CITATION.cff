@@ -1,5 +1,6 @@
 cff-version: 1.2.0
 message: "If you find this paper useful, please cite it as below."
+type: article
 authors:
 - family-names: "Goswami"
   given-names: "Prajnan"
@@ -9,18 +10,18 @@ title: "Exploring Training Recipes and Transformer Neural Networks for Optical F
 date-released: 2022-12-15
 url: "https://github.com/prajnan93/optical-flow-ms-thesis"
 license: MIT
-preferred-citation:
-  type: article
-  authors:
-  - family-names: "Goswami"
-    given-names: "Prajnan"
-  - family-names: "Jiang"
-    given-names: "Huaizu"
-  # doi: "10.0000/00000"
-  month: 1
-  start: 1 # First page number
-  end: 29 # Last page number
-  title: "Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation"
-  issue: 1
-  volume: 1
-  year: 2023
+# preferred-citation:
+#   type: article
+#   authors:
+#   - family-names: "Goswami"
+#     given-names: "Prajnan"
+#   - family-names: "Jiang"
+#     given-names: "Huaizu"
+#   # doi: "10.0000/00000"
+#   month: 1
+#   start: 1 # First page number
+#   end: 29 # Last page number
+#   title: "Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation"
+#   issue: 1
+#   volume: 1
+#   year: 2023
