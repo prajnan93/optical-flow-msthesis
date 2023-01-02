@@ -1,5 +1,0 @@
-NAME: mmFlowPWCNet
-SIMILARITY:
-  TYPE: 'CorrelationLayer'
-  PAD_SIZE: 4
-  MAX_DISPLACEMENT: 4

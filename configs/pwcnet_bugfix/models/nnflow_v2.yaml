@@ -1,5 +1,0 @@
-NAME: mmFlowPWCNet
-SIMILARITY:
-  TYPE: 'SpatialCorrelation'
-  PAD_SIZE: 0
-  MAX_DISPLACEMENT: 4
