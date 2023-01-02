@@ -12,12 +12,10 @@ license: MIT
 preferred-citation:
   type: article
   authors:
-  - family-names: "Lisa"
-    given-names: "Mona"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
-  - family-names: "Bot"
-    given-names: "Hew"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Goswami"
+    given-names: "Prajnan"
+  - family-names: "Jiang"
+    given-names: "Huaizu"
   # doi: "10.0000/00000"
   month: 1
   start: 1 # First page number
