@@ -1,0 +1,10 @@
+_BASE_: "./kubric_improved_aug.yaml"
+DATA:
+  AUGMENTATION:
+    PARAMS:
+      TRAINING:
+        NOISE_AUG_PARAMS: {
+          "enabled": False,
+          "aug_prob": 0.0,
+          "noise_std_range": 0.06 
+        }

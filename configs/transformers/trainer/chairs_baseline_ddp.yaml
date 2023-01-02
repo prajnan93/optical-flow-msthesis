@@ -1,0 +1,7 @@
+_BASE_: "./chairs_baseline_ddp.yaml"
+DISTRIBUTED:
+  USE: True
+  WORLD_SIZE: 5
+  BACKEND: nccl
+  MASTER_ADDR: localhost
+  MASTER_PORT: "12355"
