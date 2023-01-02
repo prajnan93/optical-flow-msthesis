@@ -1,15 +1,20 @@
 import argparse
-import torch
 
-from ezflow.engine import Trainer, DistributedTrainer, get_training_cfg
+import torch
+from ezflow.data import DataloaderCreator
+from ezflow.engine import DistributedTrainer, Trainer, get_training_cfg
 from ezflow.models import build_model
 
-from nnflow import eval_model, CustomDataloaderCreator, GMFlowV2, BasicEncoderV2, SCCFlow
+from nnflow import BasicEncoderV2, GMFlowV2, SCCFlow, eval_model
 from nnflow.models.flownet_c_v2 import FlowNetC_V2
 
 
 def count_params(model):
-    return str(sum(p.numel() for p in model.parameters() if p.requires_grad) / 1000000) + "M params"
+    return (
+        str(sum(p.numel() for p in model.parameters() if p.requires_grad) / 1000000)
+        + "M params"
+    )
+
 
 def main():
 
@@ -71,12 +76,7 @@ def main():
         default=0,
         help="Number of epochs to train after resumption",
     )
-    parser.add_argument(
-        "--device", 
-        type=str, 
-        default="0",
-        help="Device ID"
-    )
+    parser.add_argument("--device", type=str, default="0", help="Device ID")
     parser.add_argument(
         "--distributed_backend",
         type=str,
@@ -84,9 +84,7 @@ def main():
         help="Backend to use for distributed computing",
     )
     parser.add_argument(
-        "--world_size",
-        type=int,
-        help="World size for Distributed Training"
+        "--world_size", type=int, help="World size for Distributed Training"
     )
     parser.add_argument(
         "--use_mixed_precision",
@@ -178,11 +176,10 @@ def main():
             # training_cfg.SCHEDULER.PARAMS.total_steps = args.num_steps
             # else:
             #     training_cfg.SCHEDULER.PARAMS.total_steps = args.num_steps + args.start_iteration
-                
 
     if args.num_steps is not None:
         training_cfg.NUM_STEPS = args.num_steps
-        
+
         if training_cfg.SCHEDULER.NAME == "OneCycleLR":
             training_cfg.SCHEDULER.PARAMS.total_steps = args.num_steps
 
@@ -197,50 +194,50 @@ def main():
 
     if training_cfg.DISTRIBUTED.USE is True:
 
-        train_loader_creator = CustomDataloaderCreator(
+        train_loader_creator = DataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
             distributed=True,
             world_size=training_cfg.DISTRIBUTED.WORLD_SIZE,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=training_cfg.DATA.SHUFFLE
+            shuffle=training_cfg.DATA.SHUFFLE,
         )
 
-        val_loader_creator = CustomDataloaderCreator(
+        val_loader_creator = DataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
             distributed=True,
             world_size=training_cfg.DISTRIBUTED.WORLD_SIZE,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=training_cfg.DATA.SHUFFLE
+            shuffle=training_cfg.DATA.SHUFFLE,
         )
 
     else:
-        train_loader_creator = CustomDataloaderCreator(
+        train_loader_creator = DataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=training_cfg.DATA.SHUFFLE
+            shuffle=training_cfg.DATA.SHUFFLE,
         )
 
-        val_loader_creator = CustomDataloaderCreator(
+        val_loader_creator = DataloaderCreator(
             batch_size=training_cfg.DATA.BATCH_SIZE,
             num_workers=training_cfg.DATA.NUM_WORKERS,
             pin_memory=training_cfg.DATA.PIN_MEMORY,
             append_valid_mask=training_cfg.DATA.APPEND_VALID_MASK,
-            shuffle=training_cfg.DATA.SHUFFLE
+            shuffle=training_cfg.DATA.SHUFFLE,
         )
 
-    train_aug_params={
-        "color_aug_params":training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
+    train_aug_params = {
+        "color_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.COLOR_AUG_PARAMS,
         "eraser_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ERASER_AUG_PARAMS,
         "noise_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.NOISE_AUG_PARAMS,
         "flip_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.FLIP_AUG_PARAMS,
         "spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.SPATIAL_AUG_PARAMS,
-        "advanced_spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ADVANCED_SPATIAL_AUG_PARAMS
+        "advanced_spatial_aug_params": training_cfg.DATA.AUGMENTATION.PARAMS.TRAINING.ADVANCED_SPATIAL_AUG_PARAMS,
     }
     # --------------------- TRAINING DATASETS -----------------------------------#
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "flyingchairs":
@@ -251,7 +248,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "flyingthings3d":
@@ -263,7 +260,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
         train_loader_creator.add_FlyingThings3D(
             root_dir=training_cfg.DATA.TRAIN_DATASET.ROOT_DIR,
@@ -273,7 +270,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "sceneflow":
@@ -284,7 +281,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "mpisintel":
@@ -295,7 +292,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "kitti":
@@ -306,7 +303,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "autoflow":
@@ -317,7 +314,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.TRAIN_DATASET.NAME.lower() == "kubric":
@@ -329,7 +326,7 @@ def main():
             crop_size=training_cfg.DATA.TRAIN_CROP_SIZE,
             augment=training_cfg.DATA.AUGMENTATION.USE,
             aug_params=train_aug_params,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     # --------------------- VALIDATION DATASETS -----------------------------------#
@@ -341,7 +338,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "flyingthings3d":
@@ -353,7 +350,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
         val_loader_creator.add_FlyingThings3D(
             root_dir=training_cfg.DATA.VAL_DATASET.ROOT_DIR,
@@ -363,7 +360,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "sceneflow":
@@ -373,7 +370,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "mpisintel":
@@ -385,7 +382,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "kitti":
@@ -395,7 +392,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "autoflow":
@@ -405,7 +402,7 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
 
     if training_cfg.DATA.VAL_DATASET.NAME.lower() == "kubric":
@@ -416,11 +413,11 @@ def main():
             crop_type="center",
             crop_size=training_cfg.DATA.VAL_CROP_SIZE,
             augment=False,
-            norm_params=training_cfg.DATA.NORM_PARAMS
+            norm_params=training_cfg.DATA.NORM_PARAMS,
         )
-        
+
     model = build_model(args.model, cfg_path=args.model_cfg, custom_cfg=True)
-    
+
     print(f"{args.model} model params: {count_params(model)}")
 
     model_state_dict = None
@@ -429,41 +426,40 @@ def main():
 
     if args.resume_ckpt is not None:
         training_cfg.DISTRIBUTED.USE = False
-        state_dict = torch.load(args.resume_ckpt, map_location=torch.device('cpu'))
+        state_dict = torch.load(args.resume_ckpt, map_location=torch.device("cpu"))
         if "model_state_dict" in state_dict:
             print("SAVED STATES: ", state_dict.keys())
             model_state_dict = state_dict["model_state_dict"]
         else:
             model_state_dict = state_dict
-        
+
         model.load_state_dict(model_state_dict)
-    
+
     # if args.resume:
     #     print("Loading optimizer and scheduler checkpoints to resume training")
     #     optimizer_state_dict = state_dict["optimizer_state_dict"]
-    #     scheduler_state_dict = state_dict["scheduler_state_dict"] 
-     
+    #     scheduler_state_dict = state_dict["scheduler_state_dict"]
 
     if training_cfg.DISTRIBUTED.USE is True:
         trainer = DistributedTrainer(
-            training_cfg, 
-            model, 
-            train_loader_creator = train_loader_creator, 
-            val_loader_creator = val_loader_creator
+            training_cfg,
+            model,
+            train_loader_creator=train_loader_creator,
+            val_loader_creator=val_loader_creator,
         )
     else:
         trainer = Trainer(
-            training_cfg, 
-            model, 
-            train_loader = train_loader_creator.get_dataloader(), 
-            val_loader = val_loader_creator.get_dataloader()
+            training_cfg,
+            model,
+            train_loader=train_loader_creator.get_dataloader(),
+            val_loader=val_loader_creator.get_dataloader(),
         )
-        
+
     if args.resume:
         trainer.resume_training(
             consolidated_ckpt=args.resume_ckpt,
             start_iteration=args.start_iteration,
-            total_iterations=args.num_steps
+            total_iterations=args.num_steps,
         )
     else:
         trainer.train(start_iteration=args.start_iteration)
