@@ -17,6 +17,7 @@ preferred-citation:
   - family-names: "Jiang"
     given-names: "Huaizu"
   # doi: "10.0000/00000"
+  url: "https://github.com/prajnan93/optical-flow-ms-thesis"
   month: 1
   start: 1 # First page number
   end: 29 # Last page number
