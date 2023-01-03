@@ -1,4 +1,4 @@
-# Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation
+## Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation
 
 [[official thesis report(coming soon)]](https://github.com/prajnan93/optical-flow-msthesis/blob/main/README.md)  |  [[unpublished thesis draft]](https://tinyurl.com/prajnan-ms-thesis-draft)
 
@@ -9,7 +9,7 @@ This thesis makes the following contributions:
 The majority of the code is supported by the [EzFlow](https://github.com/neu-vi/ezflow) PyTorch Library which was developed as a prerequsite for the thesis study. This repository contains the training configuration files for all the experiments and the implementation of **NAT-GM** and **SCCFlow** [_end-to-end transformer_](https://github.com/prajnan93/optical-flow-msthesis/tree/main/nnflow/models) architectures for optical flow estimation.
 ____
 
-## Four Generations of Optical Flow Models
+### Four Generations of Optical Flow Models
 
 <p align="center">
     <br>
@@ -23,7 +23,7 @@ The pretrained checkpoints for the improved results will be published in the [Ez
 
 ____
 
-## References
+### References
 
 - [FlowNet: Learning Optical Flow with Convolutional Networks](https://arxiv.org/abs/1504.06852)
 - [PWC-Net: CNNs for Optical Flow Using Pyramid, Warping, and Cost Volume](https://arxiv.org/abs/1709.02371)
