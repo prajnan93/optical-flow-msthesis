@@ -42,11 +42,20 @@ ____
 
 ### Citation
 
-```
+```bibtex
 @article{Goswami_Exploring_Training_Recipes_2022,
 author = {Goswami, Prajnan and Jiang, Huaizu},
-title = {{Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation}},
+title = {Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation},
 url = {https://github.com/prajnan93/optical-flow-msthesis},
+month = {12}
 year = {2022}
+}
+@software{Shah_EzFlow_A_modular_2021,
+author = {Shah, Neelay and Goswami, Prajnan and Jiang, Huaizu},
+license = {MIT},
+month = {11},
+title = {{EzFlow: A modular PyTorch library for optical flow estimation using neural networks}},
+url = {https://github.com/neu-vig/ezflow},
+year = {2021}
 }
 ```
