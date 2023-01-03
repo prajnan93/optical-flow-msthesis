@@ -37,3 +37,16 @@ ____
 - [Neighborhood Attention Transformer](https://arxiv.org/abs/2204.07143)
 - [Dilated Neighborhood Attention Transformer](https://arxiv.org/abs/2209.15001)
 - [Kubric](https://github.com/google-research/kubric/tree/main/challenges/optical_flow)
+
+____
+
+### Citation
+
+```
+@article{Goswami_Exploring_Training_Recipes_2022,
+author = {Goswami, Prajnan and Jiang, Huaizu},
+title = {{Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation}},
+url = {https://github.com/prajnan93/optical-flow-msthesis},
+year = {2022}
+}
+```
