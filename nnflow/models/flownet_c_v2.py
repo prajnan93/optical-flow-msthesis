@@ -1,3 +1,8 @@
+"""
+Modification of the original FlowNetC model to support RAFT's Feature Extractor
+
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
