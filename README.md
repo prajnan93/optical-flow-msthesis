@@ -19,6 +19,18 @@ ____
 
 ____
 
+### Getting Started
+
+- Follow instructions to setup EzFlow and the conda environment from [EzFlow Getting Started](https://github.com/neu-vi/ezflow/blob/main/CONTRIBUTING.rst#get-started)
+- Install the following additional packages:
+  ```
+  pip install git+https://github.com/huggingface/transformers
+  pip3 install natten -f https://shi-labs.com/natten/wheels/cu113/torch1.10.1/index.html 
+  pip install timm
+  ```
+- If `natten` package fails to install, follow the setup directions from: https://www.shi-labs.com/natten/ 
+____
+
 The pretrained checkpoints for the improved results will be published in the [EzFlow](https://github.com/neu-vi/ezflow) repository.
 
 ____
