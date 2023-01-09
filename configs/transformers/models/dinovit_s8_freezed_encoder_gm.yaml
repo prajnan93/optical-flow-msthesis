@@ -3,7 +3,7 @@ ENCODER:
   NAME: DinoVITS8
   FREEZE: True
   PRETRAINED_CKPT_PATH: "../dino_vit_pretrained/dino_deitsmall8_pretrain.pth"
-MODEL:
+FLOW_ATTENTION:
   FEATURE_CHANNELS: 384
   NUM_SCALES: 1
   UPSAMPLE_FACTOR: 8

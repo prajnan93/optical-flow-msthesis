@@ -24,20 +24,20 @@ class GMFlowV2(BaseModule):
 
         self.cfg = cfg
 
-        self.num_scales = cfg.MODEL.NUM_SCALES
-        self.feature_channels = cfg.MODEL.FEATURE_CHANNELS
-        self.upsample_factor = cfg.MODEL.UPSAMPLE_FACTOR
-        self.num_head = cfg.MODEL.NUM_HEADS
-        self.attention_type = cfg.MODEL.ATTENTION_TYPE
-        self.ffn_dim_expansion = cfg.MODEL.FFN_DIM_EXPANSION
-        self.num_transformer_layers = cfg.MODEL.NUM_TRANSFORMER_LAYERS
+        self.num_scales = cfg.FLOW_ATTENTION.NUM_SCALES
+        self.feature_channels = cfg.FLOW_ATTENTION.FEATURE_CHANNELS
+        self.upsample_factor = cfg.FLOW_ATTENTION.UPSAMPLE_FACTOR
+        self.num_head = cfg.FLOW_ATTENTION.NUM_HEADS
+        self.attention_type = cfg.FLOW_ATTENTION.ATTENTION_TYPE
+        self.ffn_dim_expansion = cfg.FLOW_ATTENTION.FFN_DIM_EXPANSION
+        self.num_transformer_layers = cfg.FLOW_ATTENTION.NUM_TRANSFORMER_LAYERS
 
-        self.attn_splits_list = cfg.MODEL.ATTN_SPLITS_LIST
-        self.corr_radius_list = cfg.MODEL.CORR_RADIUS_LIST
-        self.prop_radius_list = cfg.MODEL.PROP_RADIUS_LIST
-        self.pred_bidir_flow = cfg.MODEL.PRED_BIDIR_FLOW
+        self.attn_splits_list = cfg.FLOW_ATTENTION.ATTN_SPLITS_LIST
+        self.corr_radius_list = cfg.FLOW_ATTENTION.CORR_RADIUS_LIST
+        self.prop_radius_list = cfg.FLOW_ATTENTION.PROP_RADIUS_LIST
+        self.pred_bidir_flow = cfg.FLOW_ATTENTION.PRED_BIDIR_FLOW
 
-        self.use_sine_pos_embed = cfg.MODEL.USE_SINE_POS_EMBED
+        self.use_sine_pos_embed = cfg.FLOW_ATTENTION.USE_SINE_POS_EMBED
 
         # Backbone
         self.backbone = build_encoder(cfg.ENCODER)
