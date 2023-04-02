@@ -1,6 +1,6 @@
 ## Exploring Training Recipes and Transformer Neural Networks for Optical Flow Estimation
 
-[[official thesis report(coming soon)]](https://github.com/prajnan93/optical-flow-msthesis)  |  [[unpublished thesis draft]](https://tinyurl.com/prajnan-ms-thesis-draft)
+[[official thesis report]](https://www.proquest.com/openview/9a6963d105d9c4fb27e20c8a49d02a0f/1?pq-origsite=gscholar&cbl=18750&diss=y)
 
 This thesis makes the following contributions:
 - An emperical study of pre-training, dataset scheduling and data augmentations on **four generations of optical flow models** to provide a common training recipe. 
