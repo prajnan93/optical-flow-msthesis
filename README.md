@@ -3,10 +3,14 @@
 [[official thesis report]](https://www.proquest.com/openview/9a6963d105d9c4fb27e20c8a49d02a0f/1?pq-origsite=gscholar&cbl=18750&diss=y) | [[unpublished thesis draft]](https://tinyurl.com/prajnan-ms-thesis-draft)
 
 This thesis makes the following contributions:
-- An emperical study of pre-training, dataset scheduling and data augmentations on **four generations of optical flow models** to provide a common training recipe. 
+- An empirical study of pre-training, dataset scheduling, and data augmentations on _**four generations of optical flow models**_ to provide an _**Improved Training Recipe**_. 
 - Understanding the efficacy of Transformer Neural Networks for the optical flow estimation task.
 
-The majority of the code is supported by the [EzFlow](https://github.com/neu-vi/ezflow) PyTorch Library which was developed as a prerequsite for the thesis study. This repository contains the training configuration files for all the experiments and the implementation of **NAT-GM** and **SCCFlow** [_end-to-end transformer_](https://github.com/prajnan93/optical-flow-msthesis/tree/main/nnflow/models) architectures for optical flow estimation.
+The majority of the code is supported by the [EzFlow](https://github.com/neu-vi/ezflow) PyTorch Library which was developed as a prerequisite for the thesis study. This repository contains the training configuration files for all the experiments and the implementation of **NAT-GM** and **SCCFlow** [_end-to-end transformer_](https://github.com/prajnan93/optical-flow-msthesis/tree/main/nnflow/models) architectures for optical flow estimation.
+
+____
+
+The _**improved training recipe**_ can be found here: [kubric_improved_aug](https://github.com/neu-vi/ezflow/blob/main/configs/trainers/_base_/kubric_improved_aug.yaml)
 ____
 
 ### Four Generations of Optical Flow Models
@@ -16,7 +20,6 @@ ____
     <img src="./assets/flow_models.jpg"/>
     <br>
 </p>
-
 ____
 
 ### Getting Started
